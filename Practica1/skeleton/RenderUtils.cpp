@@ -149,7 +149,6 @@ void renderLoop()
 	glutMouseFunc(mouseCallback);
 	glutMotionFunc(motionCallback);
 	motionCallback(0,0);
-	std::cout << "hi";
 	atexit(exitCallback);
 
 	initPhysics(true);

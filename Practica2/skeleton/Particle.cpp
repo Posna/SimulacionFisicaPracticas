@@ -1,10 +1,9 @@
 #include "Particle.h"
 
-Particle::Particle(float radio, Vector4 c, Vector3 p): radio_(radio), color_(c), position_(p), PxRigidBody(RenderItem(CreateShape(PxSphereGeometry(radio)), new PxTransform(p), c), 1)
+Particle::Particle(float radio, Vector4 c, Vector3 p): radio_(radio), color_(c), position_(p)
 {
-	PxTransform* t = new PxTransform(p);
+	t = new PxTransform(p);
 	particle_ = new RenderItem(CreateShape(PxSphereGeometry(radio)), t, c);
-	actor = new PxRigidBody(CreateShape(PxSphereGeometry(radio)), 1);
 }
 
 void Particle::setVel(Vector3 v, float s)
@@ -13,10 +12,21 @@ void Particle::setVel(Vector3 v, float s)
 	speed_ = s;
 }
 
-void Particle::move()
+void Particle::setAcceleration(Vector3 a)
 {
-	position_ += velocity_ * speed_;
-	delete particle_;
-	PxTransform* t = new PxTransform(position_);
-	particle_ = new RenderItem(CreateShape(PxSphereGeometry(radio_)), t, color_);
+	acceleration_ = a;
+}
+
+void Particle::integrate(float time)
+{
+	// Trivial case, infinite mass --> do nothing
+	if (inverse_mass_ <= 0.0f) return;
+	// Update position
+	position_ += velocity_* time;
+	// Update linear velocity
+	velocity_ += acceleration_* time;
+	// Impose drag (damping)
+	velocity_ *= powf(damping_, time);
+	//Change the particles position
+	*t = PxTransform(position_);
 }

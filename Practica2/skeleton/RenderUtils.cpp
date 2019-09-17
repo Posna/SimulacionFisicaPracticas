@@ -6,6 +6,8 @@
 #include "core.hpp"
 #include "RenderUtils.hpp"
 
+#include "Particle.h"
+
 
 using namespace physx;
 
@@ -47,6 +49,7 @@ double GetCounter()
 namespace
 {
 	Camera*	sCamera;
+	Particle* particle;
 
 void motionCallback(int x, int y)
 {
@@ -95,7 +98,7 @@ void renderCallback()
 #else
 	stepPhysics(true, t);
 #endif
-
+	particle->integrate(t);
 	startRender(sCamera->getEye(), sCamera->getDir());
 
 	//fprintf(stderr, "Num Render Items: %d\n", static_cast<int>(gRenderItems.size()));
@@ -143,7 +146,6 @@ void renderLoop()
 
 	setupDefaultWindow("Simulacion Fisica Videojuegos");
 	setupDefaultRenderState();
-
 	glutIdleFunc(idleCallback);
 	glutDisplayFunc(renderCallback);
 	glutKeyboardFunc(keyboardCallback);
@@ -154,6 +156,8 @@ void renderLoop()
 	atexit(exitCallback);
 
 	initPhysics(true);
+	particle = new Particle(10);
+	particle->setVel(Vector3(10, 0, 0), 1);
 	glutMainLoop();
 }
 
