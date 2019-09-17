@@ -1,0 +1,2 @@
+-He creado la clase particle que crea una particula en una posicion y con un color concreto (si quieres ponerle posicion o color)
+-Creo una particula en el metodo initPhysics de main.cpp
