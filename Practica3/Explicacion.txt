@@ -1,0 +1,3 @@
+-Agrego variables: damping_ y acceleration_ con sus setters
+-Añado el sistema de aceleracion y rozamiento en el metodo integrate de Particle
+-En renderLopop(RenderUtils.cpp) le damos una aceleracion y un rozamiento

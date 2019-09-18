@@ -12,21 +12,11 @@ void Particle::setVel(Vector3 v, float s)
 	speed_ = s;
 }
 
-void Particle::setAcceleration(Vector3 a)
-{
-	acceleration_ = a;
-}
-
 void Particle::integrate(float time)
 {
 	// Trivial case, infinite mass --> do nothing
 	if (inverse_mass_ <= 0.0f) return;
 	// Update position
 	position_ += velocity_* time;
-	// Update linear velocity
-	velocity_ += acceleration_* time;
-	// Impose drag (damping)
-	velocity_ *= powf(damping_, time);
-	//Change the particles position
 	*t = PxTransform(position_);
 }
