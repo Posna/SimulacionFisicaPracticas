@@ -61,14 +61,17 @@ void initPhysics(bool interactive)
 void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
-	for each (Particle* p in particle)
-	{
+	//Actualiza las particulas y elimina las que sobrepasan el tiempo
+	auto aux = particle.begin();
+	while (!particle.empty() && aux != particle.end()) {
+		Particle* p = (*aux);
 		if (p != nullptr && p->update(t)) {
 			particle.erase(particle.begin());
 			delete p;
-			//p = nullptr;
-			//delete particle.front();
+			aux = particle.begin();
 		}
+		if(!particle.empty())
+			aux++;
 	}
 	gScene->simulate(t);
 	gScene->fetchResults(true);

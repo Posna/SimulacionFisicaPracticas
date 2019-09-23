@@ -6,11 +6,11 @@ Particle::Particle(float radio, Vector4 c, Vector3 p): radio_(radio), color_(c),
 	particle_ = new RenderItem(CreateShape(PxSphereGeometry(radio)), t, c);
 }
 
-//Particle::~Particle()
-//{
-//	delete t;
-//	//particle_->release();
-//}
+Particle::~Particle()
+{
+	delete t;
+	particle_->release();
+}
 
 void Particle::setVel(Vector3 v, float s)
 {

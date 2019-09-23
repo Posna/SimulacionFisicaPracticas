@@ -25,6 +25,7 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
+Particle* particle;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -38,8 +39,11 @@ void initPhysics(bool interactive)
 	gPvd->connect(*transport,PxPvdInstrumentationFlag::eALL);
 
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
-
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	particle = new Particle(10);
+	particle->setVel(Vector3(100, 0, 0), 1);
+	particle->setAcceleration(Vector3(0, -9.8, 0));
+	particle->setDumping(0.800);
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
@@ -58,7 +62,7 @@ void initPhysics(bool interactive)
 void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
-
+	particle->integrate(t);
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 }

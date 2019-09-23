@@ -1,4 +1,4 @@
 -He agregado varibles de posicion, velocidad, aceleracion y rozamiento para ir calculando la posicin de la aprticula
 -Nuevo metodo integrate en la clase Particle
--Creo la particula en RnderUitls.cpp, la inicializo en renderLoop y llamo a integrate en renderCallback
+-Creo la particula en main.cpp, la inicializo en initPhysics y llamo a integrate en stepPhysics
 -Setters para velocity_
