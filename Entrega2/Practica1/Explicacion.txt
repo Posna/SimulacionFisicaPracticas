@@ -1,8 +1,0 @@
--He creado un array de punteros a particulas de tamaño NUM_BALAS para que solo haya en pantalla NUM_BALAS particulas
--En keyboardCalback añado la tecla Q para que cree una particula
--En renderCallback recorremos el array actulizando la posicion de cada particula(integrate)
-
-MEMORIA:
-Como ya se ha mencionado el array tiene NUM_BALAS de capacidad, una vez se llena, se vuelve al inicio
-del array y elimina y se crean balas segun se va necesitando para que haya un maximo de NUM_BALAS
-de particulas moviendose
