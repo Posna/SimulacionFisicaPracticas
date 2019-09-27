@@ -3,26 +3,30 @@
 #include <random>
 
 #define GRAVITY {0.0, -9.8, 0.0}
+enum Types { FW_UNKNOWN_TYPE };
 
 class Firework :
 	public Particle
 {
-	unsigned type;
-	struct Payload {
-		// Type of payload it has (what it will generate)
-		unsigned type;
-
-		unsigned count;
-
-		void set(unsigned _type, unsigned _count)
-		{
-			type = _type;
-			count = _count;
-		}
-	};
+public:
 
 	struct FireworkRule
 	{
+		struct Payload {
+			// Type of payload it has (what it will generate)
+			unsigned type;
+
+			unsigned count;
+
+			void set(unsigned _type, unsigned _count)
+			{
+				type = _type;
+				count = _count;
+			}
+			Payload(unsigned _type, unsigned _count) {
+				set(_type, _count);
+			}
+		};
 		// Type of firework configured
 		unsigned type;
 
@@ -34,6 +38,17 @@ class Firework :
 		Vector3 maxVelocity;
 		float damping;
 		std::vector<Payload> payloads;
+
+		FireworkRule() {}
+		void setParameters(unsigned _type, float _minAge, float _maxAge, Vector3 _minVel, Vector3 _maxVel, float _damping) {
+			type = _type;
+			minAge = _minAge;
+			maxAge = _maxAge;
+			minVelocity = _minVel;
+			maxVelocity = _maxVel;
+			damping = _damping;
+		}
+
 		void create(Firework* firework, const Firework* parent = NULL)
 			const
 		{
@@ -66,7 +81,10 @@ class Firework :
 		}
 
 	};
-public:
+	FireworkRule* rules = new FireworkRule[2];
+	Firework(float _age, Vector3 _pos, Vector3 _vel);
+	void initFireworkRules();
+	unsigned type;
 	bool update(float t);
 	void FireworksCreate(unsigned type, const Firework* parent);
 	// Previous code
@@ -81,5 +99,6 @@ public:
 private:
 	// Time left for the firework to detonate
 	// When age reaches zero, the particle disappears and delivers the payload
-	float age;
+	float age;
+
 };

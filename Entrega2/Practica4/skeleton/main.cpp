@@ -4,6 +4,7 @@
 
 #include <vector>
 
+#include "Firework.h"
 #include "core.hpp"
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
@@ -27,7 +28,28 @@ PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
 std::vector<Particle*> particle;
+std::vector<Firework*> fireworks;
 
+void FireworksUpdate(float t)
+{
+	for (auto it = fireworks.begin(); it != fireworks.end(); ++it)
+	{
+		Firework* firework = (*it);
+		if (firework->isActive())
+		{
+			if (firework->update(t))
+			{
+				Firework::FireworkRule* rule = GetRuleFromType(firework->type);
+				firework->setInactive();
+				for (auto itPlayload = rule->payloads.begin(); itPlayload != rule->payloads.end(); ++itPlayload)
+				{
+					Firework::FireworkRule::Payload* payload = (*itPlayload);
+					firework->create(payload->type, payload->count, firework);
+				}
+			}
+		}
+	}
+}
 
 // Initialize physics engine
 void initPhysics(bool interactive)
