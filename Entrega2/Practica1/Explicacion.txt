@@ -1,0 +1,9 @@
+-He creado la clase ParticleSystem que hereda de Particle
+-Se generan particulas cada x tiempo con una velocidad v y se destruyen despues de un intervalo de tiempo (entre minAge y maxAge)
+
+MEMORIA:
+Tiene un sistema que despues de t segundos, se elimina la particula para no tener infinidad de particulas
+renderizandose
+
+Extra
+-He añadido que cuando lleguen a y = 0, cambie su velocidad para que parezca que hay rebotes
