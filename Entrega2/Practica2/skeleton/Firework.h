@@ -3,7 +3,7 @@
 #include <random>
 
 #define GRAVITY {0.0, -9.8, 0.0}
-enum Types { FW_UNKNOWN_TYPE };
+enum Types { FW_UNKNOWN_TYPE, NORMAL_TYPE };
 
 class Firework :
 	public Particle
@@ -52,7 +52,7 @@ public:
 		void create(Firework* firework, const Firework* parent = NULL)
 			const
 		{
-			firework->type = type;
+			firework->type_ = type;
 			firework->age = (float)(rand() % (int)(minAge*100) + (int)(maxAge*100))/100.0;
 			Vector3 vel;
 			if (parent)
@@ -83,18 +83,20 @@ public:
 	};
 	FireworkRule* rules = new FireworkRule[2];
 	Firework(float _age, Vector3 _pos, Vector3 _vel);
+	FireworkRule* GetRuleFromType(unsigned type_);
 	void initFireworkRules();
-	unsigned type;
+	unsigned type_;
 	bool update(float t);
 	void FireworksCreate(unsigned type, const Firework* parent);
+	Firework* create(unsigned type, unsigned count, Firework* f);
 	// Previous code
 	bool isActive() const
 	{
-		return type != FW_UNKNOWN_TYPE;
+		return type_ != FW_UNKNOWN_TYPE;
 	}
 	void setInactive()
 	{
-		type = FW_UNKNOWN_TYPE;
+		type_ = FW_UNKNOWN_TYPE;
 	}
 private:
 	// Time left for the firework to detonate

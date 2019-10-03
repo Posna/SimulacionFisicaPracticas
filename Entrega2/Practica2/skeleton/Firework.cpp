@@ -5,6 +5,11 @@ Firework::Firework(float _age, Vector3 _pos, Vector3 _vel): Particle(_age, _pos)
 	setVel(_vel, 1);
 }
 
+Firework::FireworkRule* Firework::GetRuleFromType(unsigned type_)
+{
+	Firework::FireworkRule f = rules[type_];
+}
+
 void Firework::initFireworkRules()
 {
 	rules[0].setParameters(
@@ -32,4 +37,9 @@ void Firework::FireworksCreate(unsigned type, const Firework* parent)
 	FireworkRule* rule = GetRuleFromType(type);
 	Firework* newFirework = AllocNewFirework();
 	rule->create(newFirework, parent);
+}
+
+Firework* Firework::create(unsigned type, unsigned count, Firework* f)
+{
+
 }

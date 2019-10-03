@@ -39,12 +39,12 @@ void FireworksUpdate(float t)
 		{
 			if (firework->update(t))
 			{
-				Firework::FireworkRule* rule = GetRuleFromType(firework->type);
+				Firework::FireworkRule* rule = GetRuleFromType(firework->type_);
 				firework->setInactive();
 				for (auto itPlayload = rule->payloads.begin(); itPlayload != rule->payloads.end(); ++itPlayload)
 				{
 					Firework::FireworkRule::Payload* payload = (*itPlayload);
-					firework->create(payload->type, payload->count, firework);
+					fireworks.push_back(firework->create(payload->type, payload->count, firework));
 				}
 			}
 		}

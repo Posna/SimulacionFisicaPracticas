@@ -79,7 +79,10 @@ void stepPhysics(bool interactive, double t)
 		if(!particle.empty() && !deleted)
 			aux++;
 	}
-	font->update(t);
+	if (font != nullptr && font->update(t)) {
+		delete font;
+		font = nullptr;
+	}
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 }
