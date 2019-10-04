@@ -28,4 +28,5 @@ private:
 	float damping_ = 0.999f;
 	float inverse_mass_ = 1.0f/30.0f;
 	float age_;
+	bool puedeRebote;
 };

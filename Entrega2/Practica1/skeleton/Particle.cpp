@@ -35,6 +35,9 @@ void Particle::setMass(float mass)
 
 void Particle::integrate(float time)
 {
+	if (velocity_.y < 0.0f) {
+		puedeRebote = true;
+	}
 	// Trivial case, infinite mass --> do nothing
 	if (inverse_mass_ <= 0.0f) return;
 	// Update position
@@ -45,8 +48,9 @@ void Particle::integrate(float time)
 	velocity_ *= powf(damping_, time);
 	//Change the particles position
 	*t = PxTransform(position_);
-	if (position_.y < 0.0f) {
+	if (position_.y < -100.0f && puedeRebote) {
 		velocity_ = Vector3(velocity_.x, -velocity_.y/2.0f, velocity_.z);
+		puedeRebote = false;
 	}
 }
 

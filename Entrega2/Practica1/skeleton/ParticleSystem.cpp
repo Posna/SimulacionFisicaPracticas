@@ -1,7 +1,7 @@
 #include "ParticleSystem.h"
 #include <cmath>
 
-ParticleSystem::ParticleSystem(Vector3 pos, float minAge, float maxAge, float spawnTime): Particle(0.0001f,Vector4(0.0f, 0.0f, 0.0f, 1.0f), pos, 5.0f), 
+ParticleSystem::ParticleSystem(Vector3 pos, float minAge, float maxAge, float spawnTime): Particle(0.0001f,Vector4(0.0f, 0.0f, 0.0f, 1.0f), pos, 1.0f), 
 	minAge_(minAge), maxAge_(maxAge), spawnTime_(spawnTime), currentTime_(spawnTime)  {
 
 }
