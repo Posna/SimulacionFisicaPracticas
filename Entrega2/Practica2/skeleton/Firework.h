@@ -79,9 +79,9 @@ public:
 			firework->setAcceleration(GRAVITY);
 			//firework->clearAccumulator();
 		}
-
 	};
-	FireworkRule* rules = new FireworkRule[2];
+
+	FireworkRule** rules = new FireworkRule*[2];
 	Firework(float _age, Vector3 _pos, Vector3 _vel);
 	FireworkRule* GetRuleFromType(unsigned type_);
 	void initFireworkRules();
@@ -102,5 +102,4 @@ private:
 	// Time left for the firework to detonate
 	// When age reaches zero, the particle disappears and delivers the payload
 	float age;
-
 };
