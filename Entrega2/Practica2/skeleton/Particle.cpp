@@ -1,20 +1,29 @@
 #include "Particle.h"
 
-Particle::Particle(float radio, Vector4 c, Vector3 p): radio_(radio), color_(c), position_(p)
+Particle::Particle(int radio, float age, Vector4 c, Vector3 p): radio_(radio), color_(c), position_(p), age_(age)
 {
 	t = new PxTransform(p);
 	particle_ = new RenderItem(CreateShape(PxSphereGeometry(radio)), t, c);
 }
 
+//Particle::Particle(float age, Vector3 p, Vector4 c): age(age), radio_(5), position_(p), color_(c)
+//{
+//	t = new PxTransform(p);
+//	particle_ = new RenderItem(CreateShape(PxSphereGeometry(5)), t, c);
+//	particle_->velocity = Vector3(0.0f, 0.0f, 0.0f);
+//}
+
 Particle::~Particle()
 {
 	delete t;
-	particle_->release();
+	if(particle_!= nullptr)
+		particle_->release();
 }
 
 void Particle::setPos(Vector3 p)
 {
-	t = new PxTransform(p);
+	//t = new PxTransform(p);
+	position_ = p;
 }
 
 Vector3 Particle::getPos() const
@@ -46,6 +55,18 @@ void Particle::setDamping(float d)
 void Particle::setMass(float mass)
 {
 	inverse_mass_ = 1.0 / mass;
+}
+
+bool Particle::update(float time)
+{
+	integrate(time);
+	age_ -= time;
+	return age_ < 0.0;
+}
+
+void Particle::free()
+{
+	particle_->release();
 }
 
 void Particle::integrate(float time)

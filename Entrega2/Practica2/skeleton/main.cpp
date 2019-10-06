@@ -26,28 +26,24 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
-
+Particle* p;
 std::vector<Particle*> particle;
 std::vector<Firework*> fireworks;
 
 void FireworksUpdate(float t)
 {
-	for (auto it = fireworks.begin(); it != fireworks.end(); ++it)
-	{
-		Firework* firework = (*it);
-		if (firework->isActive())
-		{
-			if (firework->update(t))
-			{
-				Firework::FireworkRule* rule = firework->GetRuleFromType(firework->type_);
-				firework->setInactive();
-				for (auto itPlayload = rule->payloads.begin(); itPlayload != rule->payloads.end(); ++itPlayload)
-				{
-					Firework::FireworkRule::Payload* payload = (*itPlayload);
-					fireworks.push_back(firework->create(payload->type, payload->count, firework));
-				}
-			}
+	auto aux = fireworks.begin();
+	while (!fireworks.empty() && aux != fireworks.end()) {
+		bool deleted = false;
+		Firework* p = (*aux);
+		if (p != nullptr && p->update(t)) {
+			fireworks.erase(aux);
+			delete p;
+			aux = fireworks.begin();
+			deleted = true;
 		}
+		if (!fireworks.empty() && !deleted)
+			aux++;
 	}
 }
 
@@ -63,7 +59,6 @@ void initPhysics(bool interactive)
 	gPvd->connect(*transport,PxPvdInstrumentationFlag::eALL);
 
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
-
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
@@ -74,6 +69,8 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 	// ------------------------------------------------------
+	//p = new Particle(10, Vector3(10, 10, 10));
+	//fireworks.push_back(new Firework(30, Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), 0));
 }
 
 
@@ -84,17 +81,19 @@ void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
 	//Actualiza las particulas y elimina las que sobrepasan el tiempo
-	auto aux = particle.begin();
-	while (!particle.empty() && aux != particle.end()) {
-		Particle* p = (*aux);
-		if (p != nullptr && p->update(t)) {
-			particle.erase(particle.begin());
-			delete p;
-			aux = particle.begin();
-		}
-		if(!particle.empty())
-			aux++;
-	}
+	//auto aux = particle.begin();
+	//while (!particle.empty() && aux != particle.end()) {
+	//	Particle* p = (*aux);
+	//	if (p != nullptr && p->update(t)) {
+	//		particle.erase(particle.begin());
+	//		delete p;
+	//		aux = particle.begin();
+	//	}
+	//	if(!particle.empty())
+	//		aux++;
+	//}
+	FireworksUpdate(t);
+	//p->update(t);
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 }
@@ -129,9 +128,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	//case ' ':	break;
 	case 'Q':
 	{
-		Particle* p = new Particle(1, Vector4(0, 0, 0, 1), GetCamera()->getEye());
+		/*Particle* p = new Particle(1, Vector4(0, 0, 0, 1), GetCamera()->getEye());
 		p->setVel(GetCamera()->getDir(), 50);
-		particle.push_back(p);
+		particle.push_back(p);*/
+		fireworks.push_back(new Firework(30, Vector3(), Vector3(), 0));
 		break;
 	}
 	default:
