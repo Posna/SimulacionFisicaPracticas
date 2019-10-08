@@ -50,6 +50,14 @@ public:
 		}
 	}
 
+	void deregister() {
+		--references;
+		if (references == 0)
+		{
+			DeregisterRenderItem(this);
+		}
+	}
+
 public:
 	physx::PxShape* shape;
 	const physx::PxTransform* transform;

@@ -1,6 +1,9 @@
--He creado un vector donde se van metiendo cada particula para renderizar posteriormente en stepPhysics del main
--En keyPress añado la tecla Q para que cree una particula
+-Hay una particula donde parece que salen los fireworks, pero es solo para posicionarnos en el espacio, tener un punto de referencia fijo
+-Clase Firework que hereda de particula y tiene dos structuras: Payload y FireworkRules
+-3 distintas clases de payloads. Cada tipo sale con un numero del teclado (1 = Atomo, 2 = cilindro, 3 = Esfera amorfa)
+-En main hay un vector de fireworks(que se actualiza en FireworksUpdate). Cada firework tiene un array de rules. 
+Cada rule puede tener varios payload. Cada payload tiene un vector de particulas que saldran de una forma u otra
 
 MEMORIA:
 Tiene un sistema que despues de t segundos, se elimina la particula para no tener infinidad de particulas
-renderizandose
+renderizandose. El firework se elimina cuando todas la particulas del payload desaparecen por pasar los t segundos

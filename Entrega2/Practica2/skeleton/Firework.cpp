@@ -7,24 +7,41 @@ Firework::Firework(float _age, Vector3 _pos, Vector3 _vel, int rule): Particle(5
 	rules[rule]->create(this);
 }
 
-//Firework::FireworkRule* Firework::GetRuleFromType(unsigned type_)
-//{
-//	return rules[type_];
-//}
-
 void Firework::initFireworkRules()
 {
 	rules[0] = new FireworkRule();
 	rules[0]->setParameters(
 		2, // type
 		0.5f, 1.4f, // age range
-		Vector3(-5, 25, -5), Vector3(5, 28, 5), // velocity range
+		Vector3(-5, 50, -5), Vector3(5, 60, 5), // velocity range
 		0.1 // damping
 	);
-	Payload* aux = new Payload(2, 5);
+	Payload* aux = new Payload(2, 50);
 	rules[0]->payloads.push_back(aux);
-	/*aux = new Payload(5, 5);
-	rules[0]->payloads.push_back(aux);*/
+	aux = new Payload(3, 50);
+	rules[0]->payloads.push_back(aux);
+	aux = new Payload(4, 50);
+	rules[0]->payloads.push_back(aux);
+
+	rules[1] = new FireworkRule();
+	rules[1]->setParameters(
+		3, // type
+		0.5f, 1.4f, // age range
+		Vector3(-5, 50, -5), Vector3(5, 60, 5), // velocity range
+		0.1 // damping
+	);
+	aux = new Payload(5, 50);
+	rules[1]->payloads.push_back(aux);
+
+	rules[2] = new FireworkRule();
+	rules[2]->setParameters(
+		4, // type
+		0.5f, 1.4f, // age range
+		Vector3(-5, 50, -5), Vector3(5, 60, 5), // velocity range
+		0.1 // damping
+	);
+	aux = new Payload(6, 50);
+	rules[2]->payloads.push_back(aux);
 }
 
 bool Firework::update(float t)
@@ -39,9 +56,8 @@ bool Firework::update(float t)
 			{
 				payload->set();
 				payload->setPos(getPos());
-				free();
-				//delete static_cast<Particle*>(this);
 			}
+			free();
 		}
 		return false;
 	}
@@ -51,11 +67,8 @@ bool Firework::update(float t)
 		while (!v.empty() && aux != v.end()) {
 			bool deleted = false;
 			Payload* p = (*aux);
-			if (p != nullptr && p->update(t)) {
-				v.erase(aux);
-				delete p;
-				aux = v.begin();
-				deleted = true;
+			if (p != nullptr ) {
+				p->update(t);
 			}
 			if (!v.empty() && !deleted)
 				aux++;
@@ -63,15 +76,3 @@ bool Firework::update(float t)
 		return v.empty();
 	}
 }
-
-//void Firework::FireworksCreate(unsigned type, const Firework* parent)
-//{
-//	FireworkRule* rule = GetRuleFromType(type);
-//	//Firework* newFirework = AllocNewFirework();
-//	//rule->create(newFirework, parent);
-//}
-
-//Firework* Firework::create(unsigned type, unsigned count, Firework* f)
-//{
-//	/*return new Firework()*/
-//}

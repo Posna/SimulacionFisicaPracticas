@@ -2,9 +2,10 @@
 #include "Particle.h"
 #include <random>
 
-#define GRAVITY {0.0, -9.8, 0.0}
+#define GRAVITY Vector3{0.0, -9.8, 0.0}
 #define toRadians 3.1415 / 180
-enum Types { FW_UNKNOWN_TYPE, NORMAL_TYPE, CIRCULO };
+enum Types { FW_UNKNOWN_TYPE, NORMAL_TYPE, CIRCULO_XZ, CIRCULO_XY, CIRCULO_ZY, CILINDRO, ESFERA};
+enum FireWorkTypes {ATOMO};
 
 class Firework :
 	public Particle
@@ -13,29 +14,87 @@ public:
 
 	struct Payload {
 		Payload(unsigned _type, unsigned _count): type(_type), count(_count)  {
-			//set(_type, _count);
+			//Colores aleatorios 
+			color.x = ((float)(rand() % 100))/ 100.0;
+			color.y = ((float)(rand() % 100)) / 100.0;
+			color.z = ((float)(rand() % 100)) / 100.0;
+			color.w = 1.0;
 		}
 		// Type of payload it has (what it will generate)
-		unsigned type;
+		Vector4 color;
 		std::vector<Particle*> particulas;
+		unsigned type;
 		unsigned count;
+
+		~Payload() {
+			while (particulas.begin() != particulas.end())
+			{
+				Particle* p = (*particulas.begin());
+				particulas.erase(particulas.begin());
+				delete p;
+			}
+		}
 
 		void set()
 		{
-			/*type = _type;
-			count = _count;*/
 			switch (type)
 			{
-			case CIRCULO: {
-				float z = (float)(rand() % (int)(100)) / 100.0;
-				float rnd = (float)(rand() % (int)(180)) / 100.0;
-				int ang = 360 / rnd;
-				for (int i = 0; i < 20; i++) {
-					Particle* p = new Particle(3, 3.0,Vector4(0.5f, 0.5f, 0.5f, 1.0f), Vector3(0.0f, 0.0f, 0.0f));
-					p->setVel(Vector3(cos(i * ang * toRadians),0, sin(i * ang * toRadians)), 50);
-					p->setAcceleration(GRAVITY);
+			case CIRCULO_XZ: {
+				int ang = 360 / count;
+				for (int i = 0; i < count; i++) {
+					Particle* p = new Particle(1, 2.0, color, Vector3(0.0f, 0.0f, 0.0f));
+					p->setVel(Vector3(cos(i * ang * toRadians),1.5, sin(i * ang * toRadians)), 100);
+					p->setAcceleration(GRAVITY/4);
 					p->setMass(0.001f);
 					particulas.push_back(p);
+				}
+				break;
+			}
+			case CIRCULO_XY: {
+				int ang = 360 / count;
+				for (int i = 0; i < count; i++) {
+					Particle* p = new Particle(1, 2.0, color, Vector3(0.0f, 0.0f, 0.0f));
+					p->setVel(Vector3(cos(i * ang * toRadians), sin(i * ang * toRadians)+1.5, 0), 100);
+					p->setAcceleration(GRAVITY/4);
+					p->setMass(0.001f);
+					particulas.push_back(p);
+				}
+				break;
+			}
+			case CIRCULO_ZY: {
+				int ang = 360 / count;
+				for (int i = 0; i < count; i++) {
+					Particle* p = new Particle(1, 2.0, color, Vector3(0.0f, 0.0f, 0.0f));
+					p->setVel(Vector3(0, cos(i * ang * toRadians)+1.5, sin(i * ang * toRadians)), 100);
+					p->setAcceleration(GRAVITY/4);
+					p->setMass(0.001f);
+					particulas.push_back(p);
+				}
+				break;
+			}
+			case CILINDRO: {
+				int ang = 360 / count;
+				for (int j = 0; j < count; j++) {
+					for (int i = 0; i < count; i++) {
+						Particle* p = new Particle(1, 2.0, color, Vector3(0.0f, 0.0f, 0.0f));
+						p->setVel(Vector3(cos(i * ang * toRadians), cos(j * ang * toRadians) + 1.5, sin(i * ang * toRadians)), 100);
+						p->setAcceleration(GRAVITY / 4);
+						p->setMass(0.001f);
+						particulas.push_back(p);
+					}
+				}
+				break;
+			}
+			case ESFERA: {
+				int ang = 360 / count;
+				for (int j = 0; j < count; j++) {
+					for (int i = 0; i < count; i++) {
+						Particle* p = new Particle(1, 2.0, color, Vector3(0.0f, 0.0f, 0.0f));
+						p->setVel(Vector3(cos(2*i * ang * toRadians)*sin(j * ang * toRadians), cos((-3.1415/2)*j * ang * toRadians)*cos( j * ang * toRadians)  + 1.5, sin(2*i * ang * toRadians)*sin(j * ang * toRadians)), 50);
+						p->setAcceleration(GRAVITY / 4);
+						p->setMass(0.001f);
+						particulas.push_back(p);
+					}
 				}
 				break;
 			}
@@ -82,6 +141,15 @@ public:
 		float damping;
 		std::vector<Payload*> payloads;
 
+		~FireworkRule() {
+			while (payloads.begin() != payloads.end())
+			{
+				Payload* p = (*payloads.begin());
+				payloads.erase(payloads.begin());
+				delete p;
+			}
+		}
+
 		FireworkRule() {}
 		void setParameters(unsigned _type, float _minAge, float _maxAge, Vector3 _minVel, Vector3 _maxVel, float _damping) {
 			type = _type;
@@ -105,7 +173,7 @@ public:
 			}
 			else
 			{
-				Vector3 start;
+				Vector3 start = Vector3(0.0,0.0,0.0);
 				int x = (rand() % 3) - 1;
 				start.x = 5.0f * x;
 				firework->setPos(start);
@@ -121,18 +189,20 @@ public:
 			firework->setMass(1);
 			firework->setDamping(damping);
 			firework->setAcceleration(GRAVITY);
-			//firework->clearAccumulator();
 		}
 	};
 
-	FireworkRule** rules = new FireworkRule*[2];
+	FireworkRule** rules = new FireworkRule*[3];
 	Firework(float _age, Vector3 _pos, Vector3 _vel, int rule);
-	//FireworkRule* GetRuleFromType(unsigned type_);
 	void initFireworkRules();
 	unsigned type_;
 	virtual bool update(float t);
-	//void FireworksCreate(unsigned type, const Firework* parent);
-	//Firework* create(unsigned type, unsigned count, Firework* f);
+	~Firework() {
+		for (int i = 0; i < rules_number; i++) {
+			delete rules[i];
+		}
+		delete [] rules;
+	}
 	// Previous code
 	bool isActive() const
 	{
@@ -148,4 +218,5 @@ private:
 	float age;
 
 	int rule_;
+	int rules_number = 3;
 };

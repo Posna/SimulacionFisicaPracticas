@@ -69,7 +69,7 @@ void initPhysics(bool interactive)
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 	// ------------------------------------------------------
-	//p = new Particle(10, Vector3(10, 10, 10));
+	p = new Particle(10, 5000);
 	//fireworks.push_back(new Firework(30, Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), 0));
 }
 
@@ -80,18 +80,7 @@ void initPhysics(bool interactive)
 void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
-	//Actualiza las particulas y elimina las que sobrepasan el tiempo
-	//auto aux = particle.begin();
-	//while (!particle.empty() && aux != particle.end()) {
-	//	Particle* p = (*aux);
-	//	if (p != nullptr && p->update(t)) {
-	//		particle.erase(particle.begin());
-	//		delete p;
-	//		aux = particle.begin();
-	//	}
-	//	if(!particle.empty())
-	//		aux++;
-	//}
+	//Actualiza el vector de fireworks
 	FireworksUpdate(t);
 	//p->update(t);
 	gScene->simulate(t);
@@ -104,6 +93,12 @@ void cleanupPhysics(bool interactive)
 {
 	PX_UNUSED(interactive);
 
+	while (fireworks.begin() != fireworks.end())
+	{
+		Firework* p = (*fireworks.begin());
+		fireworks.erase(fireworks.begin());
+		delete p;
+	}
 	// Rigid Body ++++++++++++++++++++++++++++++++++++++++++
 	gScene->release();
 	gDispatcher->release();
@@ -126,12 +121,19 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	{
 	//case 'B': break;
 	//case ' ':	break;
-	case 'Q':
+	case '1':
 	{
-		/*Particle* p = new Particle(1, Vector4(0, 0, 0, 1), GetCamera()->getEye());
-		p->setVel(GetCamera()->getDir(), 50);
-		particle.push_back(p);*/
 		fireworks.push_back(new Firework(30, Vector3(), Vector3(), 0));
+		break;
+	}
+	case '2':
+	{
+		fireworks.push_back(new Firework(30, Vector3(), Vector3(), 1));
+		break;
+	}
+	case '3':
+	{
+		fireworks.push_back(new Firework(30, Vector3(), Vector3(), 2));
 		break;
 	}
 	default:

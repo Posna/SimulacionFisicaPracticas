@@ -16,8 +16,7 @@ Particle::Particle(int radio, float age, Vector4 c, Vector3 p): radio_(radio), c
 Particle::~Particle()
 {
 	delete t;
-	if(particle_!= nullptr)
-		particle_->release();
+	particle_->release();
 }
 
 void Particle::setPos(Vector3 p)
@@ -66,7 +65,7 @@ bool Particle::update(float time)
 
 void Particle::free()
 {
-	particle_->release();
+	particle_->deregister();
 }
 
 void Particle::integrate(float time)
