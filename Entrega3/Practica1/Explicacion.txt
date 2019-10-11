@@ -1,0 +1,6 @@
+-He creado un vector donde se van metiendo cada particula para renderizar posteriormente en stepPhysics del main
+-En keyPress añado la tecla Q para que cree una particula
+
+MEMORIA:
+Tiene un sistema que despues de t segundos, se elimina la particula para no tener infinidad de particulas
+renderizandose
