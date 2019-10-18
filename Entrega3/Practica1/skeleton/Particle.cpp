@@ -1,6 +1,6 @@
 #include "Particle.h"
 
-Particle::Particle(float radio, Vector4 c, Vector3 p): radio_(radio), color_(c), position_(p)
+Particle::Particle(float radio, Vector4 c, Vector3 p, float age): radio_(radio), color_(c), position_(p), age(age)
 {
 	t = new PxTransform(p);
 	particle_ = new RenderItem(CreateShape(PxSphereGeometry(radio)), t, c);
@@ -36,7 +36,7 @@ void Particle::setMass(float mass)
 void Particle::integrate(float time)
 {
 	// Trivial case, infinite mass --> do nothing
-	if (inverse_mass_ <= 0.0f) return;
+	if (hasInfiniteMass()) return;
 	// Update position
 	position_ += velocity_*speed_* time;
 
@@ -56,6 +56,26 @@ void Particle::integrate(float time)
 void Particle::addForce(const Vector3& f)
 {
 	force_ += f;
+}
+
+Vector3 Particle::getVelocity() const
+{
+	return velocity_;
+}
+
+Vector3 Particle::getPos() const
+{
+	return position_;
+}
+
+float Particle::getMass()
+{
+	return 1.0/inverse_mass_;
+}
+
+bool Particle::hasInfiniteMass()
+{
+	return inverse_mass_ <= 0.0f;
 }
 
 bool Particle::update(float t)

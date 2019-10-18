@@ -8,6 +8,7 @@
 #include "RenderUtils.hpp"
 #include "callbacks.hpp"
 #include "Particle.h"
+#include "ParticleSystem.h"
 
 using namespace physx;
 
@@ -27,6 +28,7 @@ PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
 
 std::vector<Particle*> particle;
+ParticleSystem* font;
 
 
 // Initialize physics engine
@@ -45,6 +47,7 @@ void initPhysics(bool interactive)
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
+	font = new ParticleSystem(Vector3(0.0f, 0.0f, 0.0f), 1.0f, 4.0f, 0.01f);
 	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
@@ -72,6 +75,10 @@ void stepPhysics(bool interactive, double t)
 		}
 		if (!particle.empty())
 			aux++;
+	}
+	if (font != nullptr && font->update(t)) {
+		delete font;
+		font = nullptr;
 	}
 	gScene->simulate(t);
 	gScene->fetchResults(true);
@@ -106,7 +113,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		//case ' ':	break;
 	case 'Q':
 	{
-		Particle* p = new Particle(1, Vector4(0, 0, 0, 1), GetCamera()->getEye());
+		Particle* p = new Particle(1, Vector4(0, 0, 0, 1), GetCamera()->getEye(), 10);
 		p->setVel(GetCamera()->getDir(), 50);
 		particle.push_back(p);
 		break;
