@@ -29,6 +29,7 @@ ContactReportCallback gContactReportCallback;
 
 std::vector<Particle*> particle;
 ParticleSystem* font;
+ParticleSystem* font1;
 
 
 // Initialize physics engine
@@ -47,7 +48,8 @@ void initPhysics(bool interactive)
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-	font = new ParticleSystem(Vector3(0.0f, 0.0f, 0.0f), 1.0f, 4.0f, 0.01f);
+	font = new ParticleSystem(Vector3(50.0f, 0.0f, -50.0f), 1.0f, 4.0f, 0.01f, -9.8/4);
+	font1 = new ParticleSystem(Vector3(-50.0f, 0.0f, 50.0f), 1.0f, 4.0f, 0.01f, -9.8 / 8);
 	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
@@ -79,6 +81,10 @@ void stepPhysics(bool interactive, double t)
 	if (font != nullptr && font->update(t)) {
 		delete font;
 		font = nullptr;
+	}
+	if (font1 != nullptr && font1->update(t)) {
+		delete font1;
+		font1 = nullptr;
 	}
 	gScene->simulate(t);
 	gScene->fetchResults(true);

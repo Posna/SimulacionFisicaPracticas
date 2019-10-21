@@ -1,6 +1,7 @@
--He creado un vector donde se van metiendo cada particula para renderizar posteriormente en stepPhysics del main
--En keyPress añado la tecla Q para que cree una particula
+-Creo dos Sistemas de particulas en el main las cuales actualizo en el stepPhysics del main
+-En el sistema de particulas he agregado un registro de particulas para añadir gravedad a cada una (dependiendo del sistema al que pertenezcan
+tendran una gravedad un otra)
 
-MEMORIA:
-Tiene un sistema que despues de t segundos, se elimina la particula para no tener infinidad de particulas
-renderizandose
+JERARQUIA:
+He creado la clase particle force generator, de la cual heredan las demas (ParticleGravity, PartcileDrag).
+ParticleForceRegistry es una clase a parte que lleva el recuento de las particulas y las fuerzas que hay que aplicarlas

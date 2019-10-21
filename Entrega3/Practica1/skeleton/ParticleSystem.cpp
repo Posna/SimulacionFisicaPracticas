@@ -1,19 +1,22 @@
 #include "ParticleSystem.h"
 #include <cmath>
 
-ParticleSystem::ParticleSystem(Vector3 pos, float minAge, float maxAge, float spawnTime): Particle(0.0001f,Vector4(0.0f, 0.0f, 0.0f, 1.0f), pos, 1.0f), 
+ParticleSystem::ParticleSystem(Vector3 pos, float minAge, float maxAge, float spawnTime, float gravity): Particle(0.0001f,Vector4(0.0f, 0.0f, 0.0f, 1.0f), pos, 1.0f), 
 	minAge_(minAge), maxAge_(maxAge), spawnTime_(spawnTime), currentTime_(spawnTime)  {
-
+	gravity_ = new ParticleGravity(Vector3(0, gravity, 0));
+	registry = new ParticleForceRegistry();
 }
 
 bool ParticleSystem::update(float time)
 {
 	spawnParticle(time);
 	auto aux = particles_.begin();
+	registry->updateForces(time);
 	while (!particles_.empty() && aux != particles_.end()) {
 		bool deleted = false;
 		Particle* p = (*aux);
 		if (p != nullptr && p->update(time)) {
+			registry->remove(p, gravity_);
 			particles_.erase(aux);
 			delete p;
 			aux = particles_.begin();
@@ -41,12 +44,13 @@ void ParticleSystem::spawnParticle(float time)
 	if (currentTime_ < 0) {
 		float ageAux = (float)(rand() % (int)(maxAge_ * 100) + (int)(minAge_ * 100)) / 100.0;
 		Particle* aux = new Particle(1, Vector4(1.0f, 1.0f, 0.0f, 1.0f), getPos(),ageAux);
-		aux->setAcceleration(GRAVITY);
+		//aux->setAcceleration(GRAVITY);
 		aux->setMass(0.1f);
 		float vel = (float)(rand() % (int)(20 * 100) + (int)(10 * 100)) / 100.0;
 		aux->setVel(randomVector(Vector3(0.0f,0.0f,0.0f), 0.0f), vel);
 		particles_.push_back(aux);
 		currentTime_ = spawnTime_;
+		registry->add(aux, gravity_);
 	}
 	currentTime_ -= time;
 }

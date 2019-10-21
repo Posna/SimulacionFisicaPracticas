@@ -1,0 +1,8 @@
+-Creo un Sistemas de particulas en el main las cuales actualizo en el stepPhysics del main
+-En el sistema de particulas he agregado un registro de particulas para añadir gravedad y la fuerza
+del viento cuando haya que aplicarla a cada una (dependiendo del sistema al que pertenezcan
+tendran una gravedad un otra)
+-El viento va cambiando de direccion (tipo aspersor)
+
+JERARQUIA:
+Añadida la clase ParticleWind que hereda de ParticleForceGenerator
