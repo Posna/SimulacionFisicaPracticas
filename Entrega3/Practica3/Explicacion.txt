@@ -1,0 +1,7 @@
+-Creo un Sistemas de particulas en el main las cuales actualizo en el stepPhysics del main
+-En el keyPressed del main, cuando apretamos la E, añade una fuerza a todas la particulas del sistema de particulas, que actua o no, dependiendo de si
+se encuentran en el radio de la explosion o no
+
+JERARQUIA:
+Añadida la clase ParticleExplosion que hereda de ParticleForceGenerator. Ahora ParticleForceGenerator tiene un bool para saber si son fuerzas
+continuas(como la gravedad) o si son solo un instante
