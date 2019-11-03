@@ -10,16 +10,17 @@
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="ParticleAnchoredSpring.cpp" />
     <ClCompile Include="ParticleDrag.cpp" />
     <ClCompile Include="ParticleExplosion.cpp" />
     <ClCompile Include="ParticleForceGenerator.cpp" />
     <ClCompile Include="ParticleForceRegistry.cpp" />
     <ClCompile Include="ParticleGravity.cpp" />
+    <ClCompile Include="ParticleSpring.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="ParticleWind.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
-    <ClCompile Include="ParticleSpring.cpp" />
-    <ClCompile Include="ParticleAnchoredSpring.cpp" />
+    <ClCompile Include="ParticleBuoyancy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Camera.h">
@@ -31,16 +32,17 @@
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleAnchoredSpring.h" />
     <ClInclude Include="ParticleDrag.h" />
     <ClInclude Include="ParticleExplosion.h" />
     <ClInclude Include="ParticleForceGenerator.h" />
     <ClInclude Include="ParticleForceRegistry.h" />
     <ClInclude Include="ParticleGravity.h" />
+    <ClInclude Include="ParticleSpring.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="ParticleWind.h" />
     <ClInclude Include="RenderUtils.hpp" />
-    <ClInclude Include="ParticleSpring.h" />
-    <ClInclude Include="ParticleAnchoredSpring.h" />
+    <ClInclude Include="ParticleBuoyancy.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

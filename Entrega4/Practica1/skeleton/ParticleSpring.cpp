@@ -1,7 +1,7 @@
 #include "ParticleSpring.h"
 
 
-ParticleSpring::ParticleSpring(Particle * other, float k, float restLeangth)
+ParticleSpring::ParticleSpring(Particle * other, float k, float restLeangth): other_(other), k_(k), restLength_(restLeangth)
 {
 	
 }

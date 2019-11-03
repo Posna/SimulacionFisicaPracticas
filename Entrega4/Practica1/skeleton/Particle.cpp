@@ -1,9 +1,18 @@
 #include "Particle.h"
 
-Particle::Particle(float radio, Vector4 c, Vector3 p, float age): radio_(radio), color_(c), position_(p), age(age)
+Particle::Particle(float radio, Vector4 c, Vector3 p, float age, bool cube): radio_(radio), color_(c), position_(p), age(age)
 {
 	t = new PxTransform(p);
-	particle_ = new RenderItem(CreateShape(PxSphereGeometry(radio)), t, c);
+	if(!cube)
+		particle_ = new RenderItem(CreateShape(PxSphereGeometry(radio)), t, c);
+	else
+		particle_ = new RenderItem(CreateShape(PxBoxGeometry(radio, radio, radio)), t, c);
+}
+
+Particle::Particle(PxShape* part, Vector4 c, Vector3 p): color_(c), position_(p)
+{
+	t = new PxTransform(p);
+	particle_ = new RenderItem(part, t, c);
 }
 
 Particle::~Particle()
