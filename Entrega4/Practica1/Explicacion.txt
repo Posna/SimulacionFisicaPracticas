@@ -1,7 +1,13 @@
--Creo un Sistemas de particulas en el main las cuales actualizo en el stepPhysics del main
--En el keyPressed del main, cuando apretamos la E, añade una fuerza a todas la particulas del sistema de particulas, que actua o no, dependiendo de si
-se encuentran en el radio de la explosion o no
+Practica 1
+-Creo una particula en el main a la que le añado una fuerza (ParticleAnchoredSpring) y creo otra particula con forma de cubo para que sea 
+el ancla del muelle
+-Con el espacio se elimina la gravedad aplicada a la particula. Con el + se aumenta la k y con el - se disminuye
 
-JERARQUIA:
-Añadida la clase ParticleExplosion que hereda de ParticleForceGenerator. Ahora ParticleForceGenerator tiene un bool para saber si son fuerzas
-continuas(como la gravedad) o si son solo un instante
+Practica 2
+-Creo dos particulas en el main a las que le doy gravedad opuesta a cada una y ParticleSpring
+-Con el espacio se elimina la gravedad de las dos particulas
+
+Practica 3
+-Creo que mar (Particula cubo aplanado) y un barril (particula cubo) y le añado gravedad y ParticleBuoyancy
+-Con las teclas Z y X aumento y disminuyo el volumen del barril respectivamente. Con la tecla C aumento la masa
+del barril y con la tecla V disminuyo la masa
