@@ -21,7 +21,9 @@ void ParticleContact::resolveVelocity(float t)
 
 	if (separatingVel > 0)
 		return;
-	float newSepVelocity = -separatingVel*res
+	float newSepVelocity = -separatingVel * restitution;
+	Vector3 accCausedVelocity = particle[0]->getAcceleration();
+	float accCausedVelocity = accCausedVelocity * contactNormal * t;
 	Vector3 v1 = particle[0]->getVelocity();
 	Vector3 v2 = particle[1]->getVelocity();
 

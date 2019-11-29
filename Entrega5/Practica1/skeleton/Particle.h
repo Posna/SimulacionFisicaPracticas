@@ -22,10 +22,11 @@ public:
 
 	Vector3 getVelocity() const;
 	Vector3 getPos() const;
+	Vector3 getAcceleration() const { return acceleration_; }
 	float getAge() const;
 	float getMass() const;
 	float getGravity() const { return g_; }
-	
+
 	bool update(float t);
 private:
 	void clearForce();
@@ -35,14 +36,14 @@ private:
 
 	Vector4 color_;
 	Vector3 position_;
-	Vector3 velocity_ = Vector3(0,0,0);
+	Vector3 velocity_ = Vector3(0, 0, 0);
 	Vector3 acceleration_ = Vector3(0, 0, 0);
 	Vector3 force_ = Vector3(0);
 
 	float speed_ = 1.0f;
 	float radio_;
 	float damping_ = 0.999f;
-	float inverse_mass_ = 1.0f/0.1f;
+	float inverse_mass_ = 1.0f / 0.1f;
 	float age;
 	float g_;
 };
