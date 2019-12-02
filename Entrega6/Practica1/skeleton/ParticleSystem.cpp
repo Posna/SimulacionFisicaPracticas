@@ -7,6 +7,7 @@ ParticleSystem::ParticleSystem(Vector3 pos, float minAge, float maxAge, float sp
 	registry = new ParticleForceRegistry();
 }
 
+
 bool ParticleSystem::update(float time)
 {
 	spawnParticle(time);

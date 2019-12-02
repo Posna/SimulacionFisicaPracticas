@@ -26,8 +26,10 @@
     <ClCompile Include="ParticleRod.cpp" />
     <ClCompile Include="ParticleSpring.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="ParticleSystemRigid.cpp" />
     <ClCompile Include="ParticleWind.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
+    <ClCompile Include="ParticleRigid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Camera.h">
@@ -55,8 +57,10 @@
     <ClInclude Include="ParticleRod.h" />
     <ClInclude Include="ParticleSpring.h" />
     <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="ParticleSystemRigid.h" />
     <ClInclude Include="ParticleWind.h" />
     <ClInclude Include="RenderUtils.hpp" />
+    <ClInclude Include="ParticleRigid.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

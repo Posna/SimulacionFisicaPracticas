@@ -20,6 +20,7 @@
 #include "ParticleCable.h"
 #include "ParticleCollisionRegistry.h"
 #include "ParticleRod.h"
+#include "ParticleSystemRigid.h"
 
 using namespace physx;
 
@@ -38,6 +39,8 @@ PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
 
+ParticleSystemRigid* prueba;
+
 std::vector<Particle*>particle;
 
 enum Fuerzas { Gravity1, Gravity2, Wind, Explosion, Gravity3 };
@@ -50,6 +53,7 @@ ParticleCable* cable;
 ParticleContact* contacto;
 ParticleContact* contacto1;
 ParticleRod* barra;
+Particle* explosion;
 
 Particle* p1;
 Particle* p2;
@@ -67,6 +71,16 @@ ParticleCollisionRegistry regCol;
 Vector3 anchorPos = Vector3(1.0f, 1.0f, 1.0f);
 
 bool keyP = true;
+
+//Parte para los rigids
+int numAct = 0;
+
+float timeSpawn = 0.5f;
+float time;
+
+PxTransform* t;
+PxShape* pShape;
+PxRigidStatic* particleRigid;
 
 
 // Initialize physics engine
@@ -104,20 +118,29 @@ void initPhysics(bool interactive)
 
 	fuerzas.push_back(new ParticleGravity(Vector3(0.0f, -9.8f, 0.0f)));
 
-	p2 = new Particle(5, Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector3(50, -10, 0), 1000);
-	//particle.push_back(p2);
-	regCol.add(p2);
-	p1 = new Particle(5, Vector4(0.0f, 0.0f, 1.0f, 1.0f), Vector3(0, -10, 0), 10000);
-	p = new Particle(1);
-	contacto = new ParticleContact(p1, p2);
-	barra = new ParticleRod(p1, p2);
-	particle.push_back(p);
-	//particle.push_back(p1);
-	regCol.add(p1);
-	p3 = new Particle(5, Vector4(1.0f, 0.7f, 0.0f, 1.0f), Vector3(50, 10, 0), 10000);
-	p4 = new Particle(5, Vector4(0.0f, 0.7f, 1.0f, 1.0f), Vector3(0, 10, 0), 10000);
-	contacto1 = new ParticleContact(p3, p4);
-	cable = new ParticleCable(p3, p4, 60);
+	//p2 = new Particle(5, Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector3(50, -10, 0), 1000);
+	////particle.push_back(p2);
+	//regCol.add(p2);
+	//p1 = new Particle(5, Vector4(0.0f, 0.0f, 1.0f, 1.0f), Vector3(0, -10, 0), 10000);
+	//p = new Particle(1);
+	//contacto = new ParticleContact(p1, p2);
+	//barra = new ParticleRod(p1, p2);
+	//particle.push_back(p);
+	////particle.push_back(p1);
+	//regCol.add(p1);
+	//p3 = new Particle(5, Vector4(1.0f, 0.7f, 0.0f, 1.0f), Vector3(50, 10, 0), 10000);
+	//p4 = new Particle(5, Vector4(0.0f, 0.7f, 1.0f, 1.0f), Vector3(0, 10, 0), 10000);
+	//contacto1 = new ParticleContact(p3, p4);
+	//cable = new ParticleCable(p3, p4, 60);
+
+	prueba = new ParticleSystemRigid(gPhysics, gScene);
+
+	t = new PxTransform(Vector3(0.0, 0.0, 0.0));
+	pShape = CreateShape(PxBoxGeometry(100, 1, 100));
+	particleRigid = gPhysics->createRigidStatic(*t);
+	particleRigid->attachShape(*pShape);
+	gScene->addActor(*particleRigid);
+	//RenderItem(pShape, particleRigid, Vector4(1.0, 0.0, 1.0, 1.0));
 	//cable->addContact(contacto1, 0);
 	/*anchSpring = new ParticleAnchoredSpring(&anchorPos, 2.0f, 3.5f);
 	spring1 = new ParticleSpring(p3, 2.0f, 3.5f);
@@ -157,24 +180,31 @@ void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
 	//Actualiza las particulas y elimina las que sobrepasan el tiempo
-	auto aux = particle.begin();
-	while (!particle.empty() && aux != particle.end()) {
-		Particle* p = (*aux);
-		/*if (p != nullptr && p->update(t)) {
-			particle.erase(aux);
-			regCol.remove(p);
-			delete p;
-			aux = particle.begin();
-		}
-		if (!particle.empty())
-			aux++;*/
-		p->integrate(t);
-		aux++;
+	//auto aux = particle.begin();
+	//while (!particle.empty() && aux != particle.end()) {
+	//	Particle* p = (*aux);
+	//	/*if (p != nullptr && p->update(t)) {
+	//		particle.erase(aux);
+	//		regCol.remove(p);
+	//		delete p;
+	//		aux = particle.begin();
+	//	}
+	//	if (!particle.empty())
+	//		aux++;*/
+	//	p->integrate(t);
+	//	aux++;
+	//}
+	
+	//registry.updateForces(t);
+	prueba->update(t);
+	if (explosion != nullptr && explosion->update(t)) {
+		delete explosion;
+		explosion = nullptr;
 	}
-	registry.updateForces(t);
+		//delete explosion;
 	//regCol.updateCollisions(t);
 	//cable->addContact(contacto, 0);
-	p2->integrate(t);
+	/*p2->integrate(t);
 	p1->integrate(t);
 	p3->integrate(t);
 	p4->integrate(t);
@@ -183,7 +213,7 @@ void stepPhysics(bool interactive, double t)
 	cable->addContact(contacto1, 0);
 	contacto1->resolve(t);
 
-	p->integrate(t);
+	p->integrate(t);*/
 	//ParticleContact pc = ParticleContact(p1, p2);
 	//pc.resolve(t);
 	//pc = ParticleContact(p2, p);
@@ -241,6 +271,10 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	}
 	case 'X':
 	{
+		prueba->addForce(Vector3(2.0, 5.0, 0.0), 15);
+		if (explosion != nullptr)
+			delete explosion;
+		explosion = new Particle(15, Vector4(1.0, 0.0, 0.0, 0.0), Vector3(2.0, 5.0, 0.0), 2.0f);
 		//flotacion->addVolume(-0.01f);
 		break;
 	}
@@ -268,7 +302,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		break;
 	}
 	case ' ':
-		p2->setVel(Vector3(1.0f ,0.0f, 0.0f), 2);
+		p2->setVel(Vector3(1.0f, 0.0f, 0.0f), 2);
 		p3->setVel(Vector3(1.0f, 0.0f, 0.0f), 1);
 		//registry.remove(p1, fuerzas[Gravity2]);
 		//registry.remove(p2, fuerzas[Gravity1]);

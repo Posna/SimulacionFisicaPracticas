@@ -25,6 +25,7 @@ private:
 	ParticleForceRegistry* registry;
 	ParticleGravity* gravity_;
 	ParticleWind* wind_;
+
 	float minAge_;
 	float maxAge_;
 	float spawnTime_;
