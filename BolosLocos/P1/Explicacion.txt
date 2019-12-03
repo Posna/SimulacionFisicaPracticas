@@ -1,0 +1,2 @@
+1- Bolos Normal
+2- Particulas van saltando desde un hueco, golpeas con tu bola para tirar mas bolos

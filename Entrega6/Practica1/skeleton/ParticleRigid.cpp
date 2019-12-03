@@ -11,6 +11,18 @@ ParticleRigid::ParticleRigid(PxPhysics* gPhysics, PxScene* gScene, float radio, 
 	gScene_->addActor(*particle_);
 }
 
+ParticleRigid::ParticleRigid(PxPhysics* gPhysics, PxScene* gScene, float x, float y, float z, Vector3 position = Vector3(0.0), float age = 10.0): age_(age),
+	gPhysics_(gPhysics), gScene_(gScene)
+{
+	t_ = new PxTransform(position);
+	PxShape* p = CreateShape(PxBoxGeometry(x, y, z));
+	
+	particle_ = gPhysics_->createRigidDynamic(*t_);
+	particle_->attachShape(*p);
+	PxRigidBodyExt::updateMassAndInertia(*particle_, 1.0);
+	gScene_->addActor(*particle_);
+}
+
 ParticleRigid::~ParticleRigid()
 {
 	particle_->release();

@@ -1,9 +1,12 @@
 #include <vector>
+#include <iostream>
 
 #include "PxPhysicsAPI.h"
 
 #include "core.hpp"
 #include "RenderUtils.hpp"
+
+#include "Particle.h"
 
 
 using namespace physx;
@@ -20,6 +23,7 @@ std::vector<const RenderItem*> gRenderItems;
 double PCFreq = 0.0;
 __int64 CounterStart = 0;
 __int64 CounterLast = 0;
+const int NUM_BALAS = 10;
 
 void StartCounter()
 {
@@ -45,7 +49,9 @@ double GetCounter()
 
 namespace
 {
+	int nDisparos = 0;
 	Camera*	sCamera;
+	Particle* particle[NUM_BALAS];
 
 void motionCallback(int x, int y)
 {
@@ -56,6 +62,16 @@ void keyboardCallback(unsigned char key, int x, int y)
 {
 	if(key==27)
 		exit(0);
+	/*if (toupper(key) == 'Q') {
+		int aux = nDisparos % NUM_BALAS;
+		if (particle[aux] != nullptr) {
+			delete particle[aux];
+			particle[aux] = nullptr;
+		}
+		particle[aux] = new Particle(1, Vector4(0, 0, 0, 1), sCamera->getEye());
+		particle[aux]->setVel(GetCamera()->getDir(), 50); 
+		nDisparos++;
+	}*/
 
 	if(!sCamera->handleKey(key, x, y))
 		keyPress(key, sCamera->getTransform());
@@ -94,15 +110,20 @@ void renderCallback()
 #else
 	stepPhysics(true, t);
 #endif
-
 	startRender(sCamera->getEye(), sCamera->getDir());
-
+	/*for (int i = 0; i < 10; i++) {
+		if (particle[i] != nullptr && particle[i]->update(t)) {
+			delete particle[i];
+			particle[i] = nullptr;
+		}
+	}*/
 	//fprintf(stderr, "Num Render Items: %d\n", static_cast<int>(gRenderItems.size()));
 	for (auto it = gRenderItems.begin(); it != gRenderItems.end(); ++it)
 	{
 		const RenderItem* obj = (*it);
+		//obj->setPos(&PxTransform(obj->transform->p + obj->velocity * obj->speed));
 		auto objTransform = obj->transform;
-		if (!objTransform)
+		if (!objTransform) 
 		{
 			auto actor = obj->actor;
 			if (actor)
@@ -114,15 +135,15 @@ void renderCallback()
 		renderShape(*obj->shape, objTransform ? *objTransform : physx::PxTransform(PxIdentity), obj->color);
 	}
 
-	//PxScene* scene;
-	//PxGetPhysics().getScenes(&scene, 1);
-	//PxU32 nbActors = scene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC);
-	//if (nbActors)
-	//{
-	//	std::vector<PxRigidActor*> actors(nbActors);
-	//	scene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor**>(&actors[0]), nbActors);
-	//	renderActors(&actors[0], static_cast<PxU32>(actors.size()), true, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-	//}
+	PxScene* scene;
+	PxGetPhysics().getScenes(&scene, 1);
+	PxU32 nbActors = scene->getNbActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC);
+	if (nbActors)
+	{
+		std::vector<PxRigidActor*> actors(nbActors);
+		scene->getActors(PxActorTypeFlag::eRIGID_DYNAMIC | PxActorTypeFlag::eRIGID_STATIC, reinterpret_cast<PxActor**>(&actors[0]), nbActors);
+		renderActors(&actors[0], static_cast<PxU32>(actors.size()), true, Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+	}
 
 	finishRender();
 }
@@ -137,11 +158,10 @@ void exitCallback(void)
 void renderLoop()
 {
 	StartCounter();
-	sCamera = new Camera(PxVec3(50.0f, 50.0f, 50.0f), PxVec3(-1.0f,-1.0f,-1.0f));
+	sCamera = new Camera(PxVec3(50.0f, 50.0f, 50.0f), PxVec3(-1.0f, -1.0f, -1.0f));//PxVec3(-0.6f,-0.2f,-0.7f));
 
 	setupDefaultWindow("Simulacion Fisica Videojuegos");
 	setupDefaultRenderState();
-
 	glutIdleFunc(idleCallback);
 	glutDisplayFunc(renderCallback);
 	glutKeyboardFunc(keyboardCallback);

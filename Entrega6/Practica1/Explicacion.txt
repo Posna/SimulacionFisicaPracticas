@@ -1,15 +1,6 @@
 Practica 1
-He creado la clase ParticleContact,la clase ParticleContactResolver, la clase ParticleLink, la clase ParticleCable(hereda de ParticleLink).
-En el main, creo las particulas p3 y p4 y les añado la funcion de que tengan una cuerda entre ellas.
-Todo esto se actualiza en el stepPhysics.
-
-Practica 2
-Para esta parte he creado la clase ParticleRod(hereda de ParticleLink)
-En el main se crean las particulas p1 y p2 y le añado la funcion de barra.
-Al igual que en el apartado anterior, todo se actualiza en el stepPhysics.
+He creado la clase ParticleRigid y la clase ParticleSystemRigid, ambas para crear particulas como se explica en la practica. En
+ParticleRigid se elimina la particula despues de un tiempo. En ParticleSystemRigid se crean la particulas con un maximo y cada x tiempo
 
 FUNCIONAMIENTO:
-El cable tiene las esferas azul clarito y amarillo. La amarilla es sobre la que se le aplican los cambios de velocidad.
-La barra tiene las esferas azul y roja. La roja es sobre la que se le aplican los cambios de velocidad.
-Con la tecla V, se lleva las bolas amarilla y roja hacia el centro, con la B se paran y con el espacio, se agrega una pequeña velocidad
-en una direccion concreta
+Con la tecla X se crea una explosion que añade fuerza a las particulas que se crean dentro del area de una esfera
