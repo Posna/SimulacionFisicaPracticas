@@ -253,6 +253,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Barra.cpp" />
     <ClCompile Include="Bolos.cpp" />
     <ClCompile Include="callbacks.cpp" />
     <ClCompile Include="main.cpp" />
@@ -281,6 +282,7 @@
     <ClCompile Include="Render\Render.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Barra.h" />
     <ClInclude Include="Bolos.h" />
     <ClInclude Include="callbacks.hpp" />
     <ClInclude Include="core.hpp" />

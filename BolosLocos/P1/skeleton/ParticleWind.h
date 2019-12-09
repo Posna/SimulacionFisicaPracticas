@@ -11,9 +11,11 @@ class ParticleWind: public ParticleForceGenerator
 	float giro = 0;
 public:
 	ParticleWind(const Vector3& pos, float radio) : pos(pos), radio(radio) {
-		p = new Particle(radio, Vector4(0, 0, 1, 0), pos, 3600.0f);
+		p = new Particle(radio, Vector4(0, 0, 1, 0), pos, 86400.0f);
 	}
+	~ParticleWind();
 	virtual void updateForce(Particle* particle, float t);
+	virtual void updateForce(ParticleRigid* particle, float t);
 private:
 	
 };

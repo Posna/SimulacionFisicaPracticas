@@ -7,4 +7,5 @@ class ParticleGravity :public ParticleForceGenerator
 public:
 	ParticleGravity(const Vector3& gravity) : g(gravity) {}
 	virtual void updateForce(Particle* particle, float t);
+	virtual void updateForce(ParticleRigid* particle, float t) {};
 };

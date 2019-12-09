@@ -9,7 +9,8 @@ using namespace physx;
 class ParticleSystemRigid
 {
 public:
-	ParticleSystemRigid(PxPhysics* gPhysics, PxScene* gScene, float radio = 1.0);
+	ParticleSystemRigid(PxPhysics* gPhysics, PxScene* gScene, Vector3 p, float radio = 1.0);
+	~ParticleSystemRigid();
 	bool update(float time);
 	void addForce(Vector3 pos, float radio);
 private:
@@ -23,7 +24,8 @@ private:
 	int numAct = 0;
 
 	float radio_;
-	float timeSpawn = 0.01;
+	float timeSpawn = 0.02;
 	float time_ = 0.0;
+	Vector3 pos_;
 };
 

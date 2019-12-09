@@ -149,9 +149,9 @@ void exitCallback(void)
 void renderLoop()
 {
 	StartCounter();
-	sCamera = new Camera(PxVec3(0.0f, 33.0f, 100.0f), PxVec3(0.0f, -1.0f, -3.0f));//PxVec3(-0.6f,-0.2f,-0.7f));
+	sCamera = new Camera(PxVec3(0.0f, 33.0f, 240.0f), PxVec3(0.0f, -1.0f, -6.0f));//PxVec3(-0.6f,-0.2f,-0.7f));
 
-	setupDefaultWindow("Simulacion Fisica Videojuegos");
+	setupDefaultWindow("Bolos Locos");
 	setupDefaultRenderState();
 	glutIdleFunc(idleCallback);
 	glutDisplayFunc(renderCallback);

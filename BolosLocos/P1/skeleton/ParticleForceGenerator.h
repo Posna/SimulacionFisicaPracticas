@@ -1,10 +1,12 @@
 #pragma once
 #include "Particle.h"
+#include "ParticleRigid.h"
 class ParticleForceGenerator
 {
 public: 
 	// Overload to provide functionality
 	virtual void updateForce(Particle* particle, float t) = 0;
+	virtual void updateForce(ParticleRigid* particle, float t) = 0;
 	void setInstantForce(bool b) { instantForce = b; }
 	bool isInstant() { return instantForce; }
 protected:

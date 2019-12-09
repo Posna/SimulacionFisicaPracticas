@@ -2,6 +2,7 @@
 
 #include <PxPhysicsAPI.h>
 
+#include <iostream>
 #include <vector>
 
 #include "core.hpp"
@@ -22,8 +23,12 @@
 #include "ParticleRod.h"
 #include "ParticleSystemRigid.h"
 #include "Bolos.h"
+#include "Barra.h"
+
 
 using namespace physx;
+
+const float TIME_MAX = 5.0f;
 
 PxDefaultAllocator		gAllocator;
 PxDefaultErrorCallback	gErrorCallback;
@@ -40,11 +45,13 @@ PxDefaultCpuDispatcher* gDispatcher = NULL;
 PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
 
-ParticleSystemRigid* prueba;
+ParticleSystemRigid* fuenteI;
+ParticleSystemRigid* fuenteD;
+ParticleSystemRigid* fuenteC;
 
 std::vector<Particle*>particle;
 
-enum Fuerzas { Gravity1, Gravity2, Wind, Explosion, Gravity3 };
+enum Fuerzas { Wind1, Wind2, Wind3};
 std::vector<ParticleForceGenerator*> fuerzas;
 ParticleAnchoredSpring* anchSpring;
 ParticleSpring* spring1;
@@ -56,6 +63,8 @@ ParticleContact* contacto1;
 ParticleRod* barra;
 Particle* explosion;
 Bolos* b;
+Barra* barra1;
+
 
 Particle* p1;
 Particle* p2;
@@ -73,34 +82,269 @@ ParticleCollisionRegistry regCol;
 Vector3 anchorPos = Vector3(1.0f, 1.0f, 1.0f);
 
 bool keyP = true;
+bool puedeTirar = true;
+
+int numBolas_ = 2;
 
 //Parte para los rigids
 int numAct = 0;
 
+bool complete = true;
+
 float timeSpawn = 0.5f;
 float time;
+int level_ = 1;
 
 PxTransform* t;
 PxShape* pShape;
-PxRigidStatic* particleRigid;
+std::vector<PxRigidStatic*> particleRigid;
 
 PxTransform* t1;
 PxShape* pShape1;
 PxRigidDynamic* particleRigid1;
 
+ParticleRigid* bola;
+ParticleRigid* muelle4;
+
+void deleteScene5() {
+	for each (PxRigidStatic * var in particleRigid)
+	{
+		var->release();
+	}
+	particleRigid.clear();
+	delete b;
+}
+
+void Scene5Update(float t) {
+	muelle4->update(t);
+	registry.updateForces(t);
+}
+
+void Scene5() {
+	t = new PxTransform(Vector3(0.0, -14.9, -25.0));
+	pShape = CreateShape(PxBoxGeometry(25, 15, 75));
+	PxRigidStatic* particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	t = new PxTransform(Vector3(0.0, -14.9, 225.0));
+	pShape = CreateShape(PxBoxGeometry(25, 15, 75));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	barra1 = new Barra();
+
+	b = new Bolos(Vector3(0.0, 5.0, 0.0), 5, gPhysics, gScene);
+	//muelle4->particle_->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+
+	//bola = new ParticleRigid(gPhysics, gScene, 5, Vector3(0.0, 0.0, 120.0));
+}
+
+void deleteScene4() {
+	for each (PxRigidStatic * var in particleRigid)
+	{
+		var->release();
+	}
+	particleRigid.clear();
+	delete fuerzas[1];
+	fuerzas.clear();
+	delete b;
+}
+
+void Scene4Update(float t) {
+	muelle4->update(t);
+	registry.updateForces(t);
+}
+
+void Scene4() {
+	t = new PxTransform(Vector3(0.0, -14.9, -25.0));
+	pShape = CreateShape(PxBoxGeometry(25, 15, 75));
+	PxRigidStatic* particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	t = new PxTransform(Vector3(0.0, -14.9, 225.0));
+	pShape = CreateShape(PxBoxGeometry(25, 15, 75));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	t = new PxTransform(Vector3(26.0, 0.0, 100.0));
+	pShape = CreateShape(PxBoxGeometry(1, 200, 75));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	t = new PxTransform(Vector3(-26.0, 0.0, 100.0));
+	pShape = CreateShape(PxBoxGeometry(1, 200, 75));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	PxQuat g = PxQuat(3.14 / 9.0, Vector3(1.0, 0.0, 0.0));
+	t = new PxTransform(Vector3(0.0, -5.0, 165.0), g);
+	pShape = CreateShape(PxBoxGeometry(25, 1, 20));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	barra1 = new Barra();
+
+	b = new Bolos(Vector3(0.0, 5.0, 0.0), 5, gPhysics, gScene);
+	muelle4 = new ParticleRigid(gPhysics, gScene, 24.9f, 9.9f, 25.0f, Vector3(0.0, 0.0, 100.0), 86400.0f);
+	fuerzas.push_back(new ParticleBuoyancy(-10.0f, 90990.1f, 20.0f));
+	//muelle4->particle_->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+	registry.add(muelle4, fuerzas[0]);
+
+	//bola = new ParticleRigid(gPhysics, gScene, 5, Vector3(0.0, 0.0, 120.0));
+}
+
+void deleteScene3() {
+	for each (PxRigidStatic * var in particleRigid)
+	{
+		var->release();
+	}
+	particleRigid.clear();
+	delete b;
+	delete barra1;
+	for each (ParticleWind* var in fuerzas)
+	{
+		delete var;
+	}
+	fuerzas.clear();
+	registry.clear();
+}
+
+void Scene3Update(float t) {
+	registry.updateForces(t);
+}
+
+void Scene3() {
+	fuerzas.push_back(new ParticleWind(Vector3(-25, 0, 80), 15));
+
+	fuerzas.push_back(new ParticleWind(Vector3(25, 0, 80), 15));
+
+	fuerzas.push_back(new ParticleWind(Vector3(0, -7, 140), 20));
+	//fuerzas[Explosion]->setInstantForce(true);
+
+	t = new PxTransform(Vector3(0.0, 0.0, -25.0));
+	pShape = CreateShape(PxBoxGeometry(25, 1, 75));
+	PxRigidStatic* particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	t = new PxTransform(Vector3(0.0, 0.0, 225.0));
+	pShape = CreateShape(PxBoxGeometry(25, 1, 75));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	t = new PxTransform(Vector3(20.0, 0.0, 100.0));
+	pShape = CreateShape(PxBoxGeometry(5, 1, 70));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	t = new PxTransform(Vector3(-20.0, 0.0, 100.0));
+	pShape = CreateShape(PxBoxGeometry(5, 1, 70));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+
+	barra1 = new Barra();
+
+	b = new Bolos(Vector3(0.0, 5.0, 0.0), 5, gPhysics, gScene);
+
+	registry.add(bola, fuerzas[0]);
+	registry.add(bola, fuerzas[1]);
+	registry.add(bola, fuerzas[2]);
+
+	//bola = new ParticleRigid(gPhysics, gScene, 5, Vector3(0.0, 0.0, 120.0));
+}
+
+
+void deleteScene2() {
+	for each (PxRigidStatic * var in particleRigid)
+	{
+		var->release();
+	}
+	particleRigid.clear();
+	delete b;
+	delete barra1;
+	delete fuenteC;
+	delete fuenteD;
+	delete fuenteI;
+}
+
+void Scene2Update(float t) {
+	fuenteI->update(t);
+	fuenteD->update(t);
+	fuenteC->update(t);
+}
+
+void Scene2() {
+	t = new PxTransform(Vector3(0.0, 0.0, -25.0));
+	pShape = CreateShape(PxBoxGeometry(25, 1, 75));
+	PxRigidStatic* particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	t = new PxTransform(Vector3(0.0, 0.0, 225.0));
+	pShape = CreateShape(PxBoxGeometry(25, 1, 75));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	PxQuat g = PxQuat(3.14 / 9.0, Vector3(1.0, 0.0, 0.0));
+	t = new PxTransform(Vector3(0.0, -5.0, 160.0), g);
+	pShape = CreateShape(PxBoxGeometry(25, 1, 20));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	barra1 = new Barra();
+
+	fuenteI = new ParticleSystemRigid(gPhysics, gScene, Vector3(7.0, 30.0, 100.0), 1.0f);
+	fuenteC = new ParticleSystemRigid(gPhysics, gScene, Vector3(0.0, 30.0, 100.0), 1.0f);
+	fuenteD = new ParticleSystemRigid(gPhysics, gScene, Vector3(-7.0, 30.0, 100.0), 1.0f);
+
+	b = new Bolos(Vector3(0.0, 5.0, 0.0), 5, gPhysics, gScene);
+
+	//bola = new ParticleRigid(gPhysics, gScene, 5, Vector3(0.0, 0.0, 120.0));
+}
+
+void deleteScene1() {
+	for each (PxRigidStatic* var in particleRigid)
+	{
+		var->release();
+	}
+	particleRigid.clear();
+	delete b;
+	delete barra1;
+}
+
+void Scene1Update(float t) {
+
+}
+
+
 void Scene1() {
-
-	fuerzas.push_back(new ParticleGravity(Vector3(-10.0f, 9.8, 5.0f)));
-
-	fuerzas.push_back(new ParticleGravity(Vector3(10.0f, -9.8, -5.0f)));
-
-	fuerzas.push_back(new ParticleWind(Vector3(0, -6000, 0), 10));
-	fuerzas[Wind]->setInstantForce(true);
-
-	fuerzas.push_back(new ParticleExplosion(Vector3(0, -6000, 0), 20));
-	fuerzas[Explosion]->setInstantForce(true);
-
-	fuerzas.push_back(new ParticleGravity(Vector3(0.0f, -9.8f, 0.0f)));
 
 
 	//p2 = new Particle(5, Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector3(50, -10, 0), 1000);
@@ -120,13 +364,17 @@ void Scene1() {
 
 	//prueba = new ParticleSystemRigid(gPhysics, gScene);
 
-	t = new PxTransform(Vector3(0.0, -0.5, 0.0));
-	pShape = CreateShape(PxBoxGeometry(25, 1, 100));
-	particleRigid = gPhysics->createRigidStatic(*t);
-	particleRigid->attachShape(*pShape);
-	gScene->addActor(*particleRigid);
+	t = new PxTransform(Vector3(0.0, 0.0, 150.0));
+	pShape = CreateShape(PxBoxGeometry(25, 1, 200));
+	PxRigidStatic* particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+	barra1 = new Barra();
 
 	b = new Bolos(Vector3(0.0, 5.0, 0.0), 5, gPhysics, gScene);
+
+	bola = new ParticleRigid(gPhysics, gScene, 5, Vector3(0.0, 0.0, 120.0));
 
 }
 
@@ -146,16 +394,16 @@ void initPhysics(bool interactive)
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 	// For Solid Rigids +++++++++++++++++++++++++++++++++++++
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -9.8f, 0.0f);
+	sceneDesc.gravity = PxVec3(0.0f, -98.0f, 0.0f);
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
 	gScene = gPhysics->createScene(sceneDesc);
 	//Init forces
-	
-	Scene1();
 
+	//Scene1();
+	
 	/*t1 = new PxTransform(Vector3(0.0, 5.0, 20.0));
 	pShape1 = CreateShape(PxBoxGeometry(0.5, 5, 0.5));
 	particleRigid1 = gPhysics->createRigidDynamic(*t1);
@@ -200,6 +448,47 @@ void initPhysics(bool interactive)
 void stepPhysics(bool interactive, double t)
 {
 	PX_UNUSED(interactive);
+	if (complete) {
+		switch (level_)
+		{
+		case 1:
+			Scene1();
+			break;
+		case 2:
+			deleteScene1();
+			Scene2();
+			break;
+		case 3:
+			deleteScene2();
+			Scene3();
+			break;
+		case 4:
+			deleteScene3();
+			Scene4();
+			break;
+		default:
+			break;
+		}
+		complete = false;
+	}
+	switch (level_)
+	{
+	case 1:
+		Scene1Update(t);
+		break;
+	case 2:
+		Scene2Update(t);
+		break;
+	case 3:
+		Scene3Update(t);
+		break;
+
+	case 4:
+		Scene4Update(t);
+		break;
+	default:
+		break;
+	}
 	//Actualiza las particulas y elimina las que sobrepasan el tiempo
 	//auto aux = particle.begin();
 	//while (!particle.empty() && aux != particle.end()) {
@@ -215,34 +504,37 @@ void stepPhysics(bool interactive, double t)
 	//	p->integrate(t);
 	//	aux++;
 	//}
-	
+
 	//registry.updateForces(t);
 	//prueba->update(t);
+	bola->update(t);
+	barra1->update(t);
 	if (explosion != nullptr && explosion->update(t)) {
 		delete explosion;
 		explosion = nullptr;
 	}
-		//delete explosion;
-	//regCol.updateCollisions(t);
-	//cable->addContact(contacto, 0);
-	/*p2->integrate(t);
-	p1->integrate(t);
-	p3->integrate(t);
-	p4->integrate(t);
-	barra->addContact(contacto, 0);
-	contacto->resolve(t);
-	cable->addContact(contacto1, 0);
-	contacto1->resolve(t);
+	b->update(t);
+	//delete explosion;
+//regCol.updateCollisions(t);
+//cable->addContact(contacto, 0);
+/*p2->integrate(t);
+p1->integrate(t);
+p3->integrate(t);
+p4->integrate(t);
+barra->addContact(contacto, 0);
+contacto->resolve(t);
+cable->addContact(contacto1, 0);
+contacto1->resolve(t);
 
-	p->integrate(t);*/
-	//ParticleContact pc = ParticleContact(p1, p2);
-	//pc.resolve(t);
-	//pc = ParticleContact(p2, p);
-	//pc.resolve(t);
-	//pc = ParticleContact(p1, p);
-	//pc.resolve(t);
-	/*p3->integrate(t);
-	barril->integrate(t);*/
+p->integrate(t);*/
+//ParticleContact pc = ParticleContact(p1, p2);
+//pc.resolve(t);
+//pc = ParticleContact(p2, p);
+//pc.resolve(t);
+//pc = ParticleContact(p1, p);
+//pc.resolve(t);
+/*p3->integrate(t);
+barril->integrate(t);*/
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 }
@@ -277,23 +569,27 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case '+':
 	{
 		//anchSpring->addConst(+0.01f);
-		p1->setVel(-p2->getPos() + p1->getPos());
+		//p1->setVel(-p2->getPos() + p1->getPos());
 		break;
 	}
-	case '-':
+	case 'Q':
 	{
+		level_++;
+		complete = true;
 		//anchSpring->addConst(-0.01f);
 		break;
 	}
-	case 'Z':
+	case 'R':
 	{
-		Scene1();
+		system("CLS");
+		std::cout << b->caidos();
+		//Scene1();
 		//flotacion->addVolume(+0.01f);
 		break;
 	}
 	case 'X':
 	{
-		prueba->addForce(Vector3(2.0, 5.0, 0.0), 15);
+		fuenteI->addForce(Vector3(2.0, 5.0, 0.0), 15);
 		if (explosion != nullptr)
 			delete explosion;
 		explosion = new Particle(15, Vector4(1.0, 0.0, 0.0, 0.0), Vector3(2.0, 5.0, 0.0), 2.0f);
@@ -323,13 +619,29 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		//barril->setMass(barril->getMass() - 0.01);
 		break;
 	}
-	case ' ':
-		p2->setVel(Vector3(1.0f, 0.0f, 0.0f), 2);
-		p3->setVel(Vector3(1.0f, 0.0f, 0.0f), 1);
+	case ' ': {
+
+		if (level_ == 3) {
+			registry.clear();
+			delete bola;
+			bola = new ParticleRigid(gPhysics, gScene, 5, barra1->getPos());
+			registry.add(bola, fuerzas[0]);
+			registry.add(bola, fuerzas[1]);
+			registry.add(bola, fuerzas[2]);
+			bola->addForce(Vector3(0.0, 0.0, -1.0), 99999, PxForceMode::eIMPULSE);
+		}
+		else {
+			delete bola;
+			bola = new ParticleRigid(gPhysics, gScene, 5, barra1->getPos());
+			bola->addForce(Vector3(0.0, 0.0, -1.0), 99999, PxForceMode::eIMPULSE);
+		}
+		//p2->setVel(Vector3(1.0f, 0.0f, 0.0f), 2);
+		//p3->setVel(Vector3(1.0f, 0.0f, 0.0f), 1);
 		//registry.remove(p1, fuerzas[Gravity2]);
 		//registry.remove(p2, fuerzas[Gravity1]);
 		//registry.remove(p3, fuerzas[Gravity2]);
 		break;
+	}
 	default:
 		break;
 	}

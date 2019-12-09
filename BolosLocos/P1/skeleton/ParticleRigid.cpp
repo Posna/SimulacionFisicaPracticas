@@ -24,6 +24,7 @@ gPhysics_(gPhysics), gScene_(gScene)
 
 ParticleRigid::~ParticleRigid()
 {
+	
 	particle_->release();
 	delete t_;
 }
@@ -40,8 +41,13 @@ Vector3 ParticleRigid::getPosition()
 	//return t_->p;
 }
 
-void ParticleRigid::addForce(Vector3 vec, float imp)
+void ParticleRigid::setPosition(Vector3 pos)
 {
-	particle_->addForce(vec * imp);
+	t_->p = pos;
+}
+
+void ParticleRigid::addForce(Vector3 vec, float imp, PxForceMode::Enum mode)
+{
+	particle_->addForce(vec * imp, mode);
 }
 

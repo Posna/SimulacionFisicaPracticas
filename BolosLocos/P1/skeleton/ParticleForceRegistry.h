@@ -7,7 +7,7 @@ protected:
 	struct ParticleForceRegistration
 	{
 		//ParticleForceRegistration(Particle* p, ParticleForceGenerator* f): particle(p), fg(f) {}
-		Particle* particle;
+		ParticleRigid* particle;
 		ParticleForceGenerator* fg;
 	};
 	typedef std::vector<ParticleForceRegistration> Registry;
@@ -15,9 +15,9 @@ protected:
 public:
 	ParticleForceRegistry() {};
 	//Associate generator with a particle
-	void add(Particle* particle, ParticleForceGenerator* fg);
+	void add(ParticleRigid* particle, ParticleForceGenerator* fg);
 	// Remove association
-	void remove(Particle* particle, ParticleForceGenerator* fg);
+	void remove(ParticleRigid* particle, ParticleForceGenerator* fg);
 	// Removes all associations. Particle and Generators won't be deleted
 	void clear();
 	// Update all the generators in the registry

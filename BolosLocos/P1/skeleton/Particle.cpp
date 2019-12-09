@@ -1,6 +1,6 @@
 #include "Particle.h"
 
-Particle::Particle(float radio, Vector4 c, Vector3 p, float age, bool cube): radio_(radio), color_(c), position_(p), age(age)
+Particle::Particle(float radio, Vector4 c, Vector3 p, float age, bool cube): radio_(radio), colour_(c), position_(p), age_(age)
 {
 	t = new PxTransform(p);
 	if(!cube)
@@ -9,16 +9,27 @@ Particle::Particle(float radio, Vector4 c, Vector3 p, float age, bool cube): rad
 		particle_ = new RenderItem(CreateShape(PxBoxGeometry(radio, radio, radio)), t, c);
 }
 
-Particle::Particle(PxShape* part, Vector4 c, Vector3 p): color_(c), position_(p)
+Particle::Particle(PxShape* part, Vector4 c, Vector3 p): colour_(c), position_(p)
 {
 	t = new PxTransform(p);
 	particle_ = new RenderItem(part, t, c);
+}
+
+Particle::Particle(Vector4 c, Vector3 p): colour_(c), position_(p)
+{
+	t = new PxTransform(p);
 }
 
 Particle::~Particle()
 {
 	delete t;
 	particle_->release();
+}
+
+void Particle::setShape(PxShape* part)
+{
+	particle_ = new RenderItem(part, t, colour_);
+
 }
 
 void Particle::setVel(Vector3 v, float s)
@@ -79,7 +90,7 @@ Vector3 Particle::getPos() const
 
 float Particle::getAge() const
 {
-	return age;
+	return age_;
 }
 
 float Particle::getMass() const
@@ -95,8 +106,8 @@ bool Particle::hasInfiniteMass()
 bool Particle::update(float t)
 {
 	integrate(t);
-	age -= t;
-	return (age < 0);
+	age_ -= t;
+	return (age_ < 0);
 }
 
 void Particle::clearForce()

@@ -13,9 +13,14 @@ class Bolos
 {
 public:
 	Bolos(Vector3 position, int filas, PxPhysics* gP, PxScene* gS);
+	~Bolos();
+	void update(float time);
+	int caidos();
 
 private:
 	std::vector<ParticleRigid*> bolos_;
 	Vector3 position_;
+	int caidos_ = 0;
+	float timeDown_ = 0.0;
 };
 

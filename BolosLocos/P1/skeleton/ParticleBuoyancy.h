@@ -14,6 +14,7 @@ public:
 		waterHeight,
 		float liquidDensity = 1000.0f);
 	virtual void updateForce(Particle* particle, float t);
+	virtual void updateForce(ParticleRigid* particle, float t);
 	void addVolume(float volum) { volume_ += volum; }
 	virtual ~ParticleBuoyancy();
 };

@@ -12,12 +12,13 @@ public:
 	~ParticleRigid();
 	bool update(float t);
 	Vector3 getPosition();
-	void addForce(Vector3 vec, float imp);
+	void setPosition(Vector3 pos);
+	void addForce(Vector3 vec, float imp, PxForceMode::Enum mode = PxForceMode::eFORCE);
+	PxRigidDynamic* particle_;
 private:
 	PxPhysics* gPhysics_;
 	PxScene* gScene_;
 	PxTransform* t_;
-	PxRigidDynamic* particle_;
 
 	float age_;
 };

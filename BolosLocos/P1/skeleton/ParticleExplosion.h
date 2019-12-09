@@ -11,5 +11,6 @@ public:
 		p = new Particle(radio, Vector4(1, 0, 0, 0), pos, 3600.0f);
 	}
 	virtual void updateForce(Particle* particle, float t);
+	virtual void updateForce(ParticleRigid* particle, float t) {}
 };
 

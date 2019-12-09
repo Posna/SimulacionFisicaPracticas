@@ -17,7 +17,7 @@ bool ParticleSystem::update(float time)
 		bool deleted = false;
 		Particle* p = (*aux);
 		if (p != nullptr && p->update(time)) {
-			registry->remove(p, gravity_);
+			//registry->remove(p, gravity_);
 			particles_.erase(aux);
 			delete p;
 			aux = particles_.begin();
@@ -32,10 +32,10 @@ bool ParticleSystem::update(float time)
 
 void ParticleSystem::addForce(ParticleForceGenerator* fg)
 {
-	for each (Particle* p in particles_)
-	{
-		registry->add(p, fg);
-	}
+	//for each (Particle* p in particles_)
+	//{
+	//	//registry->add(p, fg);
+	//}
 }
 
 ParticleSystem::~ParticleSystem()
@@ -59,7 +59,7 @@ void ParticleSystem::spawnParticle(float time)
 		aux->setVel(randomVector(Vector3(0.0f,0.0f,0.0f), 0.0f), vel);
 		particles_.push_back(aux);
 		currentTime_ = spawnTime_;
-		registry->add(aux, gravity_);
+		//registry->add(aux, gravity_);
 		//registry->add(aux, wind_);
 	}
 	currentTime_ -= time;

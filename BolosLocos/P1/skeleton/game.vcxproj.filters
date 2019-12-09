@@ -31,6 +31,7 @@
     <ClCompile Include="ParticleWind.cpp" />
     <ClCompile Include="RenderUtils.cpp" />
     <ClCompile Include="Bolos.cpp" />
+    <ClCompile Include="Barra.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Render\Camera.h">
@@ -63,6 +64,7 @@
     <ClInclude Include="ParticleWind.h" />
     <ClInclude Include="RenderUtils.hpp" />
     <ClInclude Include="Bolos.h" />
+    <ClInclude Include="Barra.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
