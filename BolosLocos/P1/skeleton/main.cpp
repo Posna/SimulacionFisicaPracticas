@@ -106,6 +106,45 @@ PxRigidDynamic* particleRigid1;
 ParticleRigid* bola;
 ParticleRigid* muelle4;
 
+
+void deleteScene6() {
+	for each (PxRigidStatic * var in particleRigid)
+	{
+		var->release();
+	}
+	particleRigid.clear();
+	delete b;
+}
+
+void Scene6Update(float t) {
+	muelle4->update(t);
+	registry.updateForces(t);
+}
+
+void Scene6() {
+	t = new PxTransform(Vector3(0.0, -14.9, -25.0));
+	pShape = CreateShape(PxBoxGeometry(25, 15, 75));
+	PxRigidStatic* particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	t = new PxTransform(Vector3(0.0, -14.9, 225.0));
+	pShape = CreateShape(PxBoxGeometry(25, 15, 75));
+	particleRigidAux = gPhysics->createRigidStatic(*t);
+	particleRigidAux->attachShape(*pShape);
+	gScene->addActor(*particleRigidAux);
+	particleRigid.push_back(particleRigidAux);
+
+	barra1 = new Barra();
+
+	b = new Bolos(Vector3(0.0, 5.0, 0.0), 5, gPhysics, gScene);
+	//muelle4->particle_->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+
+	//bola = new ParticleRigid(gPhysics, gScene, 5, Vector3(0.0, 0.0, 120.0));
+}
+
+
 void deleteScene5() {
 	for each (PxRigidStatic * var in particleRigid)
 	{

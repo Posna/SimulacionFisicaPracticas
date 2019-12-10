@@ -37,8 +37,8 @@ void ParticleContact::resolveVelocity(float t)
 	// We apply the change in velocity to each object in proportion to
 	// its inverse mass (i.e., those with lower inverse mass [higher
 	// actual mass] get less change in velocity).
-	float totalInverseMass = particle[0]->getInverseMass();
-	if (particle[1]) totalInverseMass += particle[1]->getInverseMass();
+	float totalInverseMass = particle[0]->particle_->getInvMass();
+	if (particle[1]) totalInverseMass += particle[1]->particle_->getInvMass();
 	// If all particles have infinite mass, then impulses have no effect.
 	if (totalInverseMass <= 0) return;
 	// Calculate the impulse to apply.
@@ -47,13 +47,12 @@ void ParticleContact::resolveVelocity(float t)
 	Vector3 impulsePerIMass = contactNormal * impulse;
 	// Apply impulses: they are applied in the direction of the contact,
 // and are proportional to the inverse mass.
-	particle[0]->setVel(particle[0]->getVelocity() +
-		impulsePerIMass * particle[0]->getInverseMass()
-	);
+	particle[0]->particle_->setLinearVelocity(particle[0]->particle_->getLinearVelocity() +
+		impulsePerIMass * particle[0]->particle_->getInvMass());
 	if (particle[1])
 	{
 		// Particle 1 goes in the opposite direction.
-		particle[1]->setVel(particle[1]->getVelocity() +
+		particle[1]->particle_->setLinearVelocity(particle[1]->particle_->getLinearVelocity() +
 			impulsePerIMass * -particle[1]->getInverseMass()
 		);
 	}

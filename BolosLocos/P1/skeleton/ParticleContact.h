@@ -1,16 +1,17 @@
 #pragma once
 #include "Particle.h"
+#include "ParticleRigid.h"
 class ParticleContact
 {
 public:
 	// Particles involved in the collision
-	ParticleContact(Particle* a, Particle* b) {
+	ParticleContact(ParticleRigid* a, ParticleRigid* b) {
 		particle[0] = a;
 		particle[1] = b;
 	}
 	void resolve(float t);
 	float calculateSeparatingVelocity() const;
-	Particle* particle[2];
+	ParticleRigid* particle[2];
 	// Restitution coefficient
 	float restitution = 0.5f;
 	float penetration;
