@@ -1,11 +1,11 @@
 #include "ParticleCollisionRegistry.h"
 
-void ParticleCollisionRegistry::add(Particle* p)
+void ParticleCollisionRegistry::add(ParticleRigid* p)
 {
 	registrations.push_back(p);
 }
 
-void ParticleCollisionRegistry::remove(Particle* p)
+void ParticleCollisionRegistry::remove(ParticleRigid* p)
 {
 	int i = 0;
 	while (i < registrations.size() && registrations[i] != p) { i++; }

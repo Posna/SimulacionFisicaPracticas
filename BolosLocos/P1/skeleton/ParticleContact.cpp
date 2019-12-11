@@ -13,9 +13,9 @@ void ParticleContact::resolve(float t)
 
 float ParticleContact::calculateSeparatingVelocity() const
 {
-	Vector3 relativeVelocity = particle[0]->getVelocity();
+	Vector3 relativeVelocity = particle[0]->particle_->getLinearVelocity();
 	if (particle[1])
-		relativeVelocity -= particle[1]->getVelocity();
+		relativeVelocity -= particle[1]->particle_->getLinearVelocity();
 	return relativeVelocity.dot(contactNormal);
 
 }
@@ -49,13 +49,13 @@ void ParticleContact::resolveVelocity(float t)
 // and are proportional to the inverse mass.
 	particle[0]->particle_->setLinearVelocity(particle[0]->particle_->getLinearVelocity() +
 		impulsePerIMass * particle[0]->particle_->getInvMass());
-	if (particle[1])
-	{
-		// Particle 1 goes in the opposite direction.
-		particle[1]->particle_->setLinearVelocity(particle[1]->particle_->getLinearVelocity() +
-			impulsePerIMass * -particle[1]->getInverseMass()
-		);
-	}
+	//if (particle[1])
+	//{
+	//	// Particle 1 goes in the opposite direction.
+	//	particle[1]->particle_->setLinearVelocity(particle[1]->particle_->getLinearVelocity() +
+	//		impulsePerIMass * -particle[1]->particle_->getInvMass()
+	//	);
+	//}
 	
 	
 	//// Find the velocity in the direction of the contact.
@@ -115,19 +115,19 @@ void ParticleContact::resolveInterpenetration(float t)
 	if (penetration <= 0) return;
 	// The movement of each object is based on its inverse mass, so
 	// total that.
-	float totalInverseMass = particle[0]->getInverseMass();
-	if (particle[1]) totalInverseMass += particle[1]->getInverseMass();
+	float totalInverseMass = particle[0]->particle_->getInvMass();
+	if (particle[1]) totalInverseMass += particle[1]->particle_->getInvMass();
 	// If all particles have infinite mass, then we do nothing.
 	if (totalInverseMass <= 0) return;
 	// Find the amount of penetration resolution per unit of inverse mass.
 	Vector3 movePerIMass = contactNormal *
 		(-penetration / totalInverseMass);
 	// Apply the penetration resolution.
-	particle[0]->setPos(particle[0]->getPos() +
-		movePerIMass * -particle[0]->getInverseMass());
-	if (particle[1])
+	particle[0]->setPosition(particle[0]->getPosition() +
+		movePerIMass * -particle[0]->particle_->getInvMass());
+	/*if (particle[1])
 	{
-		particle[1]->setPos(particle[1]->getPos() +
-			movePerIMass * particle[1]->getInverseMass());
-	}
+		particle[1]->setPosition(particle[1]->getPosition() +
+			movePerIMass * particle[1]->particle_->getInvMass());
+	}*/
 }

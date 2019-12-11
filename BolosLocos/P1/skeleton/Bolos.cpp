@@ -15,6 +15,7 @@ Bolos::Bolos(Vector3 position, int filas, PxPhysics* gP, PxScene* gS): position_
 			p->particle_->putToSleep();
 		}
 	}
+	maxBolos = bolos_.size();
 }
 
 Bolos::~Bolos()
@@ -60,5 +61,6 @@ int Bolos::caidos()
 			n++;
 		a = var->getPosition();
 	}
-	return (*bolos_.begin())->particle_->isSleeping(); // caidos_;
+	return /*(*bolos_.begin())->particle_->isSleeping(); //*/ caidos_;
 }
+

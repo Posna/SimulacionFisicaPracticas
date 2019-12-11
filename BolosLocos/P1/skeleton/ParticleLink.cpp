@@ -2,7 +2,7 @@
 
 float ParticleLink::currentLength() const
 {
-	Vector3 relativePos = particle[0]->getPos() -
-		particle[1]->getPos();
+	Vector3 relativePos = particle[0]->getPosition() -
+		particle[1]->getPosition();
 	return relativePos.magnitude();
 }

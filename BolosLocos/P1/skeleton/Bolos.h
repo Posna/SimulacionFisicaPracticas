@@ -16,10 +16,12 @@ public:
 	~Bolos();
 	void update(float time);
 	int caidos();
+	int numBolos() { return maxBolos; }
 
 private:
 	std::vector<ParticleRigid*> bolos_;
 	Vector3 position_;
+	int maxBolos;
 	int caidos_ = 0;
 	float timeDown_ = 0.0;
 };

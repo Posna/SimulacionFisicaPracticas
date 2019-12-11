@@ -13,7 +13,7 @@ public:
 	*/
 	float restitution = 0.5f;
 public:
-	ParticleCable(Particle* a, Particle* b, float length);
+	ParticleCable(ParticleRigid* a, ParticleRigid* b, float length);
 	/**
 	* Fills the given contact structure with the contact needed
 	* to keep the cable from overextending.

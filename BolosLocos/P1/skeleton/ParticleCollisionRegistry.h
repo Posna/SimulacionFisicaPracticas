@@ -4,13 +4,13 @@ class ParticleCollisionRegistry
 {
 protected:
 
-	typedef std::vector<Particle*> Registry;
+	typedef std::vector<ParticleRigid*> Registry;
 	Registry registrations;
 public:
 	ParticleCollisionRegistry() {};
 	
-	void add(Particle* p);
-	void remove(Particle* p);
+	void add(ParticleRigid* p);
+	void remove(ParticleRigid* p);
 	void clear();
 	void updateCollisions(float t);
 };
